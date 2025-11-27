@@ -1,0 +1,28 @@
+# Dependências
+node_modules/
+
+# Arquivos de sessão do WhatsApp
+arquivos/database/qr-code/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Variáveis de ambiente
+.env
+.env.local
+
+# Arquivos temporários
+tmp/
+temp/
+*.tmp
