@@ -1,7 +1,6 @@
 const BodyForm = require('form-data');
 const { fromBuffer } = require('file-type');
 const fetch = require('node-fetch');
-const axios = require('axios');
 const crypto = require('crypto')
 const { ImageUploadService } = require('node-upload-images');
 
@@ -43,6 +42,33 @@ class Uploader {
             const cUrl = await response.text();
             return resolve(cUrl);
         })
+    }
+}
+
+static async github(media) {
+        try {
+            const fileType = await fromBuffer(media);
+            if (!fileType) {
+                throw new Error('Tipo de arquivo não reconhecido.');
+            }
+            const fileName = `file_${Date.now()}.${fileType.ext}`;
+            const fileContent = media.toString('base64');
+            const token = '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';
+            const apiUrl = `https://api.github.com/repos/yuriXhiudy/up/contents/uploads/${fileName}`;
+            const headers = {
+                Authorization: `token ${token}`,
+                'Content-Type': 'application/json',
+            };
+            const data = {
+                message: `Upload de arquivo: ${fileName}`,
+                content: fileContent,
+            };
+            const response = await axios.put(apiUrl, data, { headers });
+            return response.data.content.download_url;
+        } catch (error) {
+            console.error('Erro ao fazer upload:', error.response ? error.response.data : error.message);
+            throw new Error('Falha no upload para o GitHub.');
+        }
     }
 }
 
