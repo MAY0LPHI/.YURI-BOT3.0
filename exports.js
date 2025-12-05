@@ -1,5 +1,5 @@
-const {"default": makeWASocket,downloadContentFromMessage, fetchLatestBaileysVersion, useMultiFileAuthState, makeInMemoryStore, DisconnectReason, WAGroupMetadata, relayWAMessage, MediaPathMap, mentionedJid, processTime, MediaType, MessageType, Presence, Mimetype, Browsers, delay, MessageRetryMap } = require('@cognima/walib');
-const LoggerB = require('@cognima/walib/lib/Utils/logger').default;
+const {"default": makeWASocket,downloadContentFromMessage, fetchLatestBaileysVersion, useMultiFileAuthState, makeInMemoryStore, DisconnectReason, WAGroupMetadata, relayWAMessage, MediaPathMap, mentionedJid, processTime, MediaType, MessageType, Presence, Mimetype, Browsers, delay, MessageRetryMap } = require('whaileys');
+const LoggerB = require('pino')({ level: 'silent' });
 
 /* --------- [ Módulos Necessários ] ---------- */
 const { Boom }  = require('@hapi/boom');
