@@ -1,4 +1,4 @@
-const {"default": makeWASocket, downloadContentFromMessage, fetchLatestBaileysVersion, useMultiFileAuthState, makeInMemoryStore, DisconnectReason, Browsers, delay } = require('whaileys');
+const {"default": makeWASocket, downloadContentFromMessage, fetchLatestBaileysVersion, useMultiFileAuthState, makeInMemoryStore, DisconnectReason, Browsers, delay } = require('@whiskeysockets/baileys');
 const LoggerB = require('pino')({ level: 'silent' });
 
 /* --------- [ Módulos Necessários ] ---------- */
