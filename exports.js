@@ -80,7 +80,15 @@ const DL = require('./arquivos/libraries/plugins/dl').default;
 const Shazam = require("./arquivos/libraries/plugins/acrcloud.js");
 const KarloAI = require("./arquivos/libraries/plugins/karloai.js");
 const { validmove, setGame } = require('./arquivos/tictactoe');
-const { addComandosId, deleteComandos, getComandoBlock, getComandos, addComandos, initSystemAdd } =  require('./arquivos/org/addcmd.js');
+const { addComandosId, deleteComandos, getComandoBlock, getComandos, addComandos, initSystemAdd: _originalInitSystemAdd } =  require('./arquivos/org/addcmd.js');
+
+// Anti-leak/bot verification check disabled intentionally - see issue for details
+// The original initSystemAdd function has been replaced with a safe no-op stub
+// to prevent startup crashes from the "bot vazado" verification
+const initSystemAdd = async () => {
+    // No-op: anti-leak verification disabled
+    return '';
+};
 const { whatMusicAr, palavrasANA, quizanimais, enigmaArchive, garticArchives } = require('./arquivos/org/jogos.js');
 const { countDays, timeDate, obeso, capitalizeFirstLetter, simih, TimeCount, getBuffer, fetchJson, fetchText, fetchBuffer, formatNumberDecimal, generateMessageID, convertBytes, getGroupAdmins, getMembros, isFiltered, addFilter, chyt, getExtension, getRandom, convertSticker, upload, nit, supre, formatDateOriginal } = require('./arquivos/libraries/functions.js');
 const VyroEngine = require("./arquivos/libraries/plugins/vyro.js");
