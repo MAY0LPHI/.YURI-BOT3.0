@@ -1,6 +1,6 @@
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-const { 'default': makeWASocket, useMultiFileAuthState, makeInMemoryStore, DisconnectReason, Browsers, delay, fetchLatestBaileysVersion, generateWAMessageFromContent, proto, makeCacheableSignalKeyStore, isJidNewsletter, isJidBroadcast, isJidStatusBroadcast } = require('@whiskeysockets/baileys');
+const { 'default': makeWASocket, useMultiFileAuthState, DisconnectReason, Browsers, delay, fetchLatestBaileysVersion, generateWAMessageFromContent, proto, makeCacheableSignalKeyStore, isJidNewsletter, isJidBroadcast, isJidStatusBroadcast } = require('@whiskeysockets/baileys');
 
 /* Módulos */
 const { LoggerB, Boom, AssemblyAI, axios, fs, cheerio, crypto, util, randomBytes, emoji, P, NodeCache, linkfy, request, ms, FileType, os, ffmpeg, fetch, exec, initSystemAdd, spawn, moment, colors, readline, execSync } = require('./exports.js');
@@ -37,8 +37,14 @@ return;
 originalConsoleInfo.apply(console, arguments);
 };
 
-const store = makeInMemoryStore({ logger: P().child({ level: "silent", stream: "store" }),
-});
+// Simple in-memory store stub (makeInMemoryStore removed in newer baileys versions)
+const store = {
+  messages: {},
+  loadMessage: async (jid, id) => {
+    return store.messages[jid]?.[id];
+  },
+  bind: () => {}
+};
 
 const msgRetryCounterCache = new NodeCache();
 
@@ -268,7 +274,7 @@ break;
 
 
 case 'connecting':
-    rl.close()
+    if (typeof rl !== 'undefined' && rl) rl.close();
     infoLog('🤖 Versão: 2.5.0 (15-04-2025)');
     infoLog(`WhatsApp-Web: ${version}`);
     infoLog(`👨🏻‍💻 Criador: Yuri Modz`);
