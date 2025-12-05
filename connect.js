@@ -1,6 +1,6 @@
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-const { 'default': makeWASocket, useMultiFileAuthState, makeInMemoryStore, DisconnectReason, Browsers, delay, fetchLatestBaileysVersion, generateWAMessageFromContent, proto, makeCacheableSignalKeyStore, isJidNewsletter, isJidBroadcast, isJidStatusBroadcast } = require('whaileys');
+const { 'default': makeWASocket, useMultiFileAuthState, makeInMemoryStore, DisconnectReason, Browsers, delay, fetchLatestBaileysVersion, generateWAMessageFromContent, proto, makeCacheableSignalKeyStore, isJidNewsletter, isJidBroadcast, isJidStatusBroadcast } = require('@whiskeysockets/baileys');
 
 /* Módulos */
 const { LoggerB, Boom, AssemblyAI, axios, fs, cheerio, crypto, util, randomBytes, emoji, P, NodeCache, linkfy, request, ms, FileType, os, ffmpeg, fetch, exec, initSystemAdd, spawn, moment, colors, readline, execSync } = require('./exports.js');

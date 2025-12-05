@@ -1,4 +1,4 @@
-const { downloadContentFromMessage, Browsers, delay, WA_DEFAULT_EPHEMERAL, generateWAMessageFromContent, proto, makeInMemoryStore, getContentType, prepareWAMessageMedia } = require('whaileys');
+const { downloadContentFromMessage, Browsers, delay, WA_DEFAULT_EPHEMERAL, generateWAMessageFromContent, proto, makeInMemoryStore, getContentType, prepareWAMessageMedia } = require('@whiskeysockets/baileys');
 
 /* Módulos */
 const { path, tesseract, File, creds, LoggerB, Boom, AssemblyAI, axios, fs, cheerio, crypto, util, randomBytes, emoji, P, NodeCache, linkfy, request, ms, FileType, os, ffmpeg, fetch, exec, spawn, moment, colors, readline, execSync } = require('./exports.js');
@@ -111,7 +111,7 @@ if(VRF_JSON_GRUPO && jsonGp[0].x9 && info.messageStubType) {
   
 if(!info.message) return;
 if(upsert.type == "append") return;  
-const baileys = require('whaileys');
+const baileys = require('@whiskeysockets/baileys');
 const type = baileys.getContentType(info.message);
 const content = JSON.stringify(info.message);
 const pushname = info.pushName ? info.pushName : '';
