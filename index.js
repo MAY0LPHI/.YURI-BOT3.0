@@ -1,4 +1,4 @@
-const { downloadContentFromMessage, relayWAMessage, mentionedJid, processTime, MediaType, Browser, Presence, Mimetype, Browsers, delay, getLastMessageInChat, WA_DEFAULT_EPHEMERAL, generateWAMessageFromContent, proto, logger, makeInMemoryStore, getContentType, INativeFlowMessage, prepareWAMessageMedia } = require('@cognima/walib');
+const { downloadContentFromMessage, Browsers, delay, WA_DEFAULT_EPHEMERAL, generateWAMessageFromContent, proto, makeInMemoryStore, getContentType, prepareWAMessageMedia } = require('whaileys');
 
 /* Módulos */
 const { path, tesseract, File, creds, LoggerB, Boom, AssemblyAI, axios, fs, cheerio, crypto, util, randomBytes, emoji, P, NodeCache, linkfy, request, ms, FileType, os, ffmpeg, fetch, exec, spawn, moment, colors, readline, execSync } = require('./exports.js');
@@ -111,7 +111,7 @@ if(VRF_JSON_GRUPO && jsonGp[0].x9 && info.messageStubType) {
   
 if(!info.message) return;
 if(upsert.type == "append") return;  
-const baileys = require('@cognima/walib');
+const baileys = require('whaileys');
 const type = baileys.getContentType(info.message);
 const content = JSON.stringify(info.message);
 const pushname = info.pushName ? info.pushName : '';
