@@ -6,7 +6,7 @@
     "aki-api": "^6.0.0",
     "archiver": "^7.0.1",
     "assemblyai": "^2.0.2",
-    "axios": "^0.21.1",
+    "axios": "^0.30.2",
     "bing-translate-api": "^4.0.2",
     "browser-id3-writer": "^4.4.0",
     "cfonts": "^2.10.0",
