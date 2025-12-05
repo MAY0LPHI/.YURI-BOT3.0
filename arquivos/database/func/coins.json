@@ -14,8 +14,8 @@
       },
       {
         "id": "558299668686@s.whatsapp.net",
-        "coins": 105,
-        "data": "19/04/2025",
+        "coins": 70,
+        "data": "06/04/2025",
         "chances": {
           "cassino": 0,
           "minerar": 0,
@@ -28,31 +28,6 @@
         "data": "06/04/2025",
         "chances": {
           "cassino": 0,
-          "minerar": 0,
-          "bet": 0
-        }
-      },
-      {
-        "id": "258870300972@s.whatsapp.net",
-        "coins": 0,
-        "data": 0,
-        "chances": {
-          "cassino": 0,
-          "minerar": 0,
-          "bet": 0
-        }
-      }
-    ]
-  },
-  {
-    "grupo": "120363400381314100@g.us",
-    "usus": [
-      {
-        "id": "553399285117@s.whatsapp.net",
-        "coins": 30,
-        "data": "08/05/2025",
-        "chances": {
-          "cassino": 1,
           "minerar": 0,
           "bet": 0
         }

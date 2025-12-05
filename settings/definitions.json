@@ -8,7 +8,7 @@
     "message": "Segundo as configurações, não é permitido enviar mensagem para o bot, atualmente ele está programado para não responder usuários comuns, somente os usuários premiuns e meus donos, qualquer dúvida entre em contato com meu proprietário."
   },
   "AntiPrivado3": {
-    "status": false,
+    "status": true,
     "message": "Este tipo de anti privado não contém nenhuma mensagem, ou seja, somente ignora os comandos dos usuários comuns (aqueles que não tem premium)."
   },
   "listanegraG": [],
@@ -37,7 +37,7 @@
   },
   "buttons": {
     "comment": "Ativar e desativar o encaminho de mensagens com botões na execução de comandos, aviso: a ativação só funciona no WhatsApp normal, já no Business tem interferência na hora de encaminhar os botões.",
-    "status": false
+    "status": true
   },
   "botOffline": false
 }

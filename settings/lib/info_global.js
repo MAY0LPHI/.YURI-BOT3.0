@@ -61,7 +61,7 @@ Primeiro ligue o bot no termux, e vá para o WhatsApp do bot em algum privado, u
 \t• ${prefix}Nick-dono Seu nick aqui
 –
 • *3)* Configure o número do dono, com o seguinte comando:
-\t• ${prefix}numero-dono 556593065507
+\t• ${prefix}numero-dono 5565993065507
 *Obs:* O número tem que ser junto, e não pode conter o símbolo de + nem - e não pode ter o 9 da operadora, tem que ser o número idêntico ao seu do whatsapp.
 –
 • *4)* Configure o prefixo que você deseja no bot, usando o seguinte comando:
@@ -80,7 +80,7 @@ Novo sistema de aluguel para facilitar a vida de nossos usuários, recentemente 
 • Caso você alugue seu bot está configuração é muito boa e funcional para você, para manter o controle com seus clientes... 
 O comando está desativado de fábrica, para ativar e desativar use o comando: ${prefix}modoaluguel, ou seja o 1 é para ativar, já o 0 é para desativar o modo de forma global. Caso ative, leia os próximos parágrafos da informação, aqui esta todo o tutorial de como usar este sistema:
 –
-*1.* Para adicionar o grupo na lista de aluguel registrado sem gerar o código que faz o registro automático e nescessário o dono está no grupo futuramente à ser registrado no aluguel, use: *${prefix}addrent 556593.../dias*.
+*1.* Para adicionar o grupo na lista de aluguel registrado sem gerar o código que faz o registro automático e nescessário o dono está no grupo futuramente à ser registrado no aluguel, use: *${prefix}addrent 558298.../dias*.
 —
 *2.* Para remover dias do grupo adicionado no aluguel, use o comando (usar o comando no grupo que está registrado): *${prefix}tirarrent quantidade de dias que você deseja remover..*
 —
@@ -92,7 +92,7 @@ O comando está desativado de fábrica, para ativar e desativar use o comando: $
 —
 *6.* Este comando mostra todas aa chaves de aluguel que foram criadas por você (dono(a) do bot) e também mostra o status da chave, se ela foi validada ou não: *${prefix}codelistrent*
 —
-*7.* Como você já leu o tópico 1, você viu que ele ativa dentro do grupo, já este comando você pode utilizar no pv do bot para realizar o registro do grupo. Este comando gera uma chave e você irá passar a mesma ao seu cliente que deseja alugar o grupo: *${prefix}gerarcoderent (556593.../dias)*, de forma rápida e complexa o grupo será ativado em segundos.
+*7.* Como você já leu o tópico 1, você viu que ele ativa dentro do grupo, já este comando você pode utilizar no pv do bot para realizar o registro do grupo. Este comando gera uma chave e você irá passar a mesma ao seu cliente que deseja alugar o grupo: *${prefix}gerarcoderent (558298.../dias)*, de forma rápida e complexa o grupo será ativado em segundos.
 —
 *8.* Este comando deleta o código gerado por você, ou seja, no tópico 7 é adicionar o código na lista de ativação do grupo, mas ele não desativa o aluguel no grupo, isso você vê no tópico 3: *${prefix}delcoderent (código)*
 —

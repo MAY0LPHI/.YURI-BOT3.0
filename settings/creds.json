@@ -1,10 +1,10 @@
 {
    "APIs": {
-        "name": "Yuri Modz APIs", 
+        "name": "Yuri - Apis", 
         "comment": "Uso para os comandos de sociais, downloads e pesquisas. Esta KEY é criada no momento que você adquire o bot e passada por fora ou já é integrada aqui.",
-        "website": "",
+        "website": "http://br2.bronxyshost.com:4323",
         "type": "Trial",
-        "apikey": ""
+        "apikey": "Yuribot1920"
    },
    "Gemini": {
         "name": "GoogleGenerativeAI | Gemini",

@@ -1,6 +1,6 @@
 [
   {
-    "name": "YURI TEST & ANOTAÇÕES",
+    "name": "[ LABORATÓRIO ] BOTS  & APIS",
     "groupId": "120363371235994226@g.us",
     "x9": false,
     "antiimg": {
@@ -55,6 +55,10 @@
       "status": false,
       "description": "Lembra das antigas travas catálogos ou usuários de contas business que ativam a funcionalidade? Você tem como remover quem usar em seu grupo e só ativar o comando [Prefixo]Anticatalogo e seja feliz!"
     },
+    "visuUnica": {
+      "status": false,
+      "description": "Detesta visualizações únicas? Dessa vez eu não vou banir, eu irei explanar o conteúdo enviado (vídeo, imagem ou áudio) e só ativar o comando [Prefixo]X9visuunica"
+    },
     "soadm": {
       "status": false,
       "description": "Tem a função de restringir todos os membros de utilizarem os comandos, menos o(s) proprietário(s) e administradores do grupo, para ativar use: [Prefixo]Soadm"
@@ -66,7 +70,7 @@
     "listanegra": [],
     "advertir": [],
     "prefixos": [
-      "+"
+      "/"
     ],
     "advertir2": [],
     "allowedParticipant": {
@@ -105,7 +109,7 @@
       "description": "Cria figurinhas de vídeos e imagens sem usar nenhum comando, ou seja, tudo de forma automatizada! Para ativar esta funcionalidade, use: [Prefixo]Autofigu"
     },
     "autoresposta": false,
-    "jogos": true,
+    "jogos": false,
     "level": false,
     "bangp": false,
     "isModoCoins": false

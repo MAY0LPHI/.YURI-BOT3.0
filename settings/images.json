@@ -3,8 +3,8 @@
     "value": "https://www.dropbox.com/scl/fi/i67nsqvsili0i1x4ia7w8/default.png?rlkey=hxoz6oyqh784rl1e6w7cvcej3&st=qpg1asno&dl=1"
   },
   "Main": {
-    "comment": "Logo principal da Bot, é usada no Menu e em alguns comandos, recomendado usar uma logo na vertical.",
-    "value": "https://img1.pixhost.to/images/6552/612007364_4761.jpg"
+    "comment": "Logo principal da BOT, é usada no Menu e em alguns comandos, recomendado usar uma logo na vertical.",
+    "value": "https://raw.githubusercontent.com/yuriXhiudy/up/main/uploads/file_1740566487441.jpg"
   },
   "Level": {
     "comment": "Fundo nescessário para a criação da imagem (através da API)  notificar a conquista de um novo level, como também a verificação do seu patente atual.",
@@ -12,8 +12,8 @@
   },
   "Welcome": {
     "comment": "Imagens usadas como fundos no Card de entrada e saída do grupo.",
-    "Left": "https://www.dropbox.com/scl/fi/ma3sajh97sbm48z7g8ark/left_enter.jpg?rlkey=8slas3sspd1ajhysuvenz9a9e&st=hftwryh9&dl=1",
-    "Enter": "https://www.dropbox.com/scl/fi/ma3sajh97sbm48z7g8ark/left_enter.jpg?rlkey=8slas3sspd1ajhysuvenz9a9e&st=hftwryh9&dl=1"
+    "Left": "https://raw.githubusercontent.com/YuriiModz/arquivos/main/fotos/1740143600780.jpg",
+    "Enter": "https://raw.githubusercontent.com/YuriiModz/arquivos/main/fotos/1740143600780.jpg"
   },
   "Brincadeiras": {
     "comment": "São comandos que usam random para medir a porcentagem e divertir seu grupo, por exemplo: “O quanto você é gay?”, “Que tal um surubão?”",

@@ -1,10 +1,10 @@
-const { downloadContentFromMessage, relayWAMessage, mentionedJid, processTime, MediaType, Browser, Presence, Mimetype, Browsers, delay, getLastMessageInChat, WA_DEFAULT_EPHEMERAL, generateWAMessageFromContent, proto, logger, makeInMemoryStore, getContentType, INativeFlowMessage, prepareWAMessageMedia } = require('baileys');
+const { downloadContentFromMessage, relayWAMessage, mentionedJid, processTime, MediaType, Browser, Presence, Mimetype, Browsers, delay, getLastMessageInChat, WA_DEFAULT_EPHEMERAL, generateWAMessageFromContent, proto, logger, makeInMemoryStore, getContentType, INativeFlowMessage, prepareWAMessageMedia } = require('@cognima/walib');
 
 /* Módulos */
 const { path, tesseract, File, creds, LoggerB, Boom, AssemblyAI, axios, fs, cheerio, crypto, util, randomBytes, emoji, P, NodeCache, linkfy, request, ms, FileType, os, ffmpeg, fetch, exec, spawn, moment, colors, readline, execSync } = require('./exports.js');
 
 /* Funções necessárias */
-const { TudoCelular, fetchBuffer, VyroEngine, DL, Shazam, RemoverFundo, uploader, addComandosId, KarloAI, deleteComandos, getComandoBlock, getComandos, addComandos, tabela, destrava, destrava2, mess, psycatgames, vyroEngine, linguagem, getInfo, writeExifImg, writeExif, countDays, timeDate, obeso, LastFM, capitalizeFirstLetter, simih, TimeCount, getBuffer, fetchJson, fetchText, formatNumberDecimal, generateMessageID, convertBytes, getGroupAdmins, getMembros, isFiltered, addFilter, chyt, getExtension, getRandom, convertSticker, upload, nit, supre, extractMetadata, arcloud, addBanned, unBanned, BannedExpired, cekBannedUser, Sticker, formatDateOriginal, validmove, setGame, palavrasANA, quizanimais, enigmaArchive, garticArchives, WebP_GIF } = require('./exports.js');
+const { TudoCelular, fetchBuffer, VyroEngine, DL, Shazam, RemoverFundo, uploader, addComandosId, KarloAI, deleteComandos, getComandoBlock, getComandos, addComandos, tabela, destrava, destrava2, mess, psycatgames, vyroEngine, linguagem, getInfo, writeExifImg, writeExif, countDays, timeDate, obeso, LastFM, capitalizeFirstLetter, simih, TimeCount, getBuffer, fetchJson, fetchText, formatNumberDecimal, generateMessageID, convertBytes, getGroupAdmins, getMembros, isFiltered, addFilter, chyt, getExtension, getRandom, convertSticker, upload, nit, supre, extractMetadata, arcloud, addBanned, unBanned, BannedExpired, cekBannedUser, Sticker, formatDateOriginal, validmove, setGame, whatMusicAr, palavrasANA, quizanimais, enigmaArchive, garticArchives, WebP_GIF } = require('./exports.js');
 
 /* JSONs nescessários */
 const { images, rglastfm, countMessage, rgtake, sotoy, definitions, daily, muted, premium, ban, limitefll, joguinhodavelhajs, ads, joguinhodavelhajs2, grupos, aluguel, chaves, anotar, antispam, config, Limit_CMD, advices, tools, level2, packname, namoro1, namoro2 } = require('./exports.js');
@@ -12,13 +12,17 @@ const { images, rglastfm, countMessage, rgtake, sotoy, definitions, daily, muted
 /* Outras funções */
 const { extractAcronymFromCity, DLT_FL, getFileBuffer, shuffle, sleep, sendPoll, enviarfiguUrl, listCommands, fuzzySimilarity, extractDDD, extractStateFromNumber, extractStateFromDDD, VerificarJSON, ANT_LTR_MD_EMJ, NomeDoBot, ownerName, prefix, channel, date, hora, sayLog, inputLog, infoLog, successLog, errorLog, warningLog, eventLog } = require('./exports.js');
 
+/* Cache de mensagens para antidelete */
+const messagesCache = new Map();
+setInterval(() => messagesCache.clear(), 600000);
+
 /* Formatar segundos para mm:ss */
 const duration = require('format-duration-time');
 
 /* Estilização de letras dentro do próprio aplicativo do WhatsApp */
 const II = "```"; const III = "`";
 
-/*** Localização de Erro ***/
+/* Localização de Erro */
 process.on('uncaughtException', function(err) {
     errorLog((new Date).toUTCString() + ' uncaughtException: ' + err);
 });
@@ -107,10 +111,11 @@ if(VRF_JSON_GRUPO && jsonGp[0].x9 && info.messageStubType) {
   
 if(!info.message) return;
 if(upsert.type == "append") return;  
-const baileys = require('baileys');
+const baileys = require('@cognima/walib');
 const type = baileys.getContentType(info.message);
 const content = JSON.stringify(info.message);
 const pushname = info.pushName ? info.pushName : '';
+messagesCache.set(info.key.id, info.message);
 
 if(definitions.ViewMessagesChat) {
   await yurizin.readMessages([info.key]);
@@ -170,7 +175,7 @@ const isnit = nit.includes(sender)
 const issupre = supre.includes(sender)
 const ischyt = chyt.includes(sender)
 
-/* Proprietários da Yuri-Bot */
+/* Proprietários da yurizin-BOT */
 const nmrdn = config["OwnerNumber"].value.replace(new RegExp("[()+-/ +/]", "gi"), "") + `@s.whatsapp.net` || isnit;
 
 /* Funções do Grupo */
@@ -192,6 +197,7 @@ var data = [{
     antifake: { status: false, description: "Você quer deixar seu grupo sem números estrangeiros? É só ativar a função de AntiFake, para ativar use: [Prefixo]Antifake", message: "0" },
     antinotas: { status: false, description: "Quer proibir todos os tipos de divulgação sendo ela oferecimentos de produtos como nota fake ou qualquer que contenha emojis de moedas em seu texto? Use o comando [Prefix]Antinotas" },
     anticatalogo: { status: false, description: "Lembra das antigas travas catálogos ou usuários de contas business que ativam a funcionalidade? Você tem como remover quem usar em seu grupo e só ativar o comando [Prefixo]Anticatalogo e seja feliz!" },
+    visuUnica: { status: false, description: "Detesta visualizações únicas? Dessa vez eu não vou banir, eu irei explanar o conteúdo enviado (vídeo, imagem ou áudio) e só ativar o comando [Prefixo]X9visuunica" },
     soadm: { status: false, description: "Tem a função de restringir todos os membros de utilizarem os comandos, menos o(s) proprietário(s) e administradores do grupo, para ativar use: [Prefixo]Soadm" },
     anti_enquete: { status: false, description: "Sem descrição!" },
     listanegra: [], 
@@ -250,6 +256,7 @@ const isListaBrancaG = definitions.listabrancaG.includes(sender)
 const isBanned = ban.includes(sender);
 const isVisualizar = definitions.ViewMessagesChat
 const isVerificado = definitions.Verificado;
+const isbuttons = definitions.buttons["status"];
 const isAntiPv = definitions.AntiPrivado["status"];
 const isAntiPv2 = definitions.AntiPrivado2["status"];
 const isAntiPv3 = definitions.AntiPrivado3["status"];
@@ -277,9 +284,11 @@ const isAntiLinkHard = isGroup ? dataGp[0].antilinkhard.status : undefined;
 const isAntiPoll = isGroup ? dataGp[0].anti_enquete.status : undefined;
 const isAntifake = isGroup ? dataGp[0].antifake.status : undefined;
 const So_Adm = isGroup ? dataGp[0].soadm.status : undefined;
+const isX9VisuUnica = isGroup ? dataGp[0].visuUnica.status : undefined;
 const ADVT = isGroup ? dataGp[0].advertir: undefined;
 const ADVT2 = isGroup ? dataGp[0].advertir2: undefined;
 const isx9 = isGroup ? dataGp[0].x9 : undefined
+const isAntiDel = isGroup ? dataGp[0].antidelete : undefined
 const isMultiP = isGroup ? dataGp[0].multiprefix : undefined
 const isAntiNotas = isGroup ? dataGp[0].antinotas.status : undefined
 const isAnticatalogo = isGroup ? dataGp[0].anticatalogo.status : undefined
@@ -297,6 +306,7 @@ const isPalavras = isGroup ? dataGp[0].antipalavrao.palavras : undefined
 const isAntiFlood = isGroup ? dataGp[0].limitec.active : undefined
 const isLimitec = isGroup ? dataGp[0].limitec.quantidade : undefined
 const isModoRPG = isGroup ? dataGp[0].modo_rpg : undefined
+const isAutodown = isGroup ? dataGp[0].autodown : undefined
 
 /* Verificados */
 const quotedLiveLocation = {key: {participant: '0@s.whatsapp.net'}, message: {liveLocationMessage: {caption: `Usuário: ${pushname}`}}};
@@ -328,6 +338,10 @@ const isUrl = (url) => {
   return false;
 }
 
+/* Para identificar se o usuário é administrador ou vip */
+const isCargo = SoDono ? "Meu Mestre." : isGroupAdmins ? "Adminstrador.": "Membro Comum."
+const isChPremium = isPremium ? "✓": "✕"
+
 /* Horário Oficial de Brasília */
 const time2 = moment().tz('America/Sao_Paulo').format('HH:mm:ss');
 if(time2 > "00:00:00" && time2 < "05:00:00") {
@@ -354,7 +368,7 @@ yurizin.reagir = (message, emoji) => new Promise(async(resolve, reject) => {
     if (!('key' in message)) return
     await yurizin.sendMessage(message.key.remoteJid, {react: {text: emoji, key: message.key, senderTimestampMs: Math.round(Date.now() / 1000)}}).then(resolve).catch(reject);
 });
-      
+
 const reply = async(str, ops = {}) => {
     let { reagir, id, options, trim, exec, ephemeral, quoted } = Object.assign({reagir: false, id: from, quoted: info, options: {}, trim: true, exec: true}, (typeof ops == 'object' ? ops : {}));
     if (!str) return await reply(0, {reagir: "😾", id: from, quoted: info}); 
@@ -408,19 +422,6 @@ const mentionImage = async(teks = '', FileN, thisQuoted = info) => {
         await yurizin.sendMessage(from, {text: String(error)}, {quoted: info});
     });
 }
-
-const mentionGif = async(teks = '', FileN, thisQuoted = info) => {
-    memberr = []; vy = teks.includes('\n') ? teks.split('\n') : [teks];
-    for(vz of vy) { 
-        for(zn of vz.split(' ')) {
-            if(zn.includes('@')) memberr.push(parseInt(zn.split('@')[1])+'@s.whatsapp.net');
-        }
-    }
-    await yurizin.sendMessage(from, {video: {url: FileN}, caption: teks.trim(), mentions: memberr, gifPlayback: true}, {quoted: thisQuoted}).catch(async(error) => {
-        await yurizin.sendMessage(from, {text: String(error)}, {quoted: info});
-    });
-}
-
 /* Criação de Sticker Automática */
 if(isAutofigu && isGroup) {
    async function autofiguf() {
@@ -477,59 +478,6 @@ if(isGroup && isBotGroupAdmins && !isGroupAdmins && !SoDono && !info.key.fromMe)
         await yurizin.groupParticipantsUpdate(from, [sender], "remove");
     }
 }
-
-// ======== || JSON-FUNÇÕES || ======== \\
-const { addVotoDuelo, delVotoDuelo } = require('./arquivos/system/voting/votoduelo.js')
-const votacaoduelo = JSON.parse(fs.readFileSync('./arquivos/system/voting/db/votacaoduelo.json'))
-const isVotoDuelo = isGroup ? votacaoduelo.includes(from) : false;
-
-if(isGroup) {
-    if (budy.toLowerCase() === 'um'){
-       voto = JSON.parse(fs.readFileSync(`./arquivos/system/voting/db/p2_votos/${from}.json`));
-       _votos = JSON.parse(fs.readFileSync(`./arquivos/system/voting/db/p1_votos/${from}.json`));
-       filtro = voto.map(v => v.participante);
-       id_voto = sender ? sender : '0@s.whatsapp.net'
-       if(filtro.includes(id_voto)) {
-          return mentions('Olá '+'@' + sender.split('@')[0] + '\n~ Não é possível votar duas vezes.', filtro, true);
-       } else {
-          voto.push({
-            participante: id_voto,
-            votacao: '1'
-          });
-          fs.writeFileSync(`./arquivos/system/voting/db/p2_votos/${from}.json`,JSON.stringify(voto));
-          _p = []
-          _voto = `*VOTAÇÃO*\n\nParticipante 1: @${_votos[0].votos.split('@')[0]}\nParticipante 2: @${_votos[0].votos2.split('@')[0]}\nMotivo da votação: ${_votos[0].razao}\nTotal de votos: ${voto.length}.\nDuração: ${_votos[0].duracao} minuto(s).`
-          for(let i = 0; i < voto.length; i++) {
-            _voto +=  `Membro [@${voto[i].participante.split('@')[0]}] votou em: ${voto[i].votacao}`;
-            _p.push(voto[i].participante);
-          }
-          _p.push(_votos[0].votos, _votos[0].votos2);
-          mentions(_voto,_p,true)
-        }
-       } else if (budy.toLowerCase() === 'dois') {
-         voto = JSON.parse(fs.readFileSync(`./arquivos/system/voting/db/p2_votos/${from}.json`))
-         _votos = JSON.parse(fs.readFileSync(`./arquivos/system/voting/db/p1_votos/${from}.json`))
-         filtro = voto.map(v => v.participante)
-         id_voto = sender ? sender : '0@s.whatsapp.net'
-         if(filtro.includes(id_voto)) {
-            return mentions('Olá '+'@' + sender.split('@')[0] + '\n~ Não é possivel votar duas vezes.', filtro, true)
-         } else {
-            voto.push({
-               participante: id_voto,
-               votacao: '2'
-            })
-            fs.writeFileSync(`./arquivos/system/voting/db/p2_votos/${from}.json`,JSON.stringify(voto))
-            _p = []
-            _voto = `*VOTAÇÃO*\n\nParticipante 1: @${_votos[0].votos.split('@')[0]}\nParticipante 2: @${_votos[0].votos2.split('@')[0]}\nMotivo da votação: ${_votos[0].razao}\nTotal de votos: ${voto.length}.\nDuração: ${_votos[0].duracao} minuto(s).`
-            for(let i = 0; i < voto.length; i++) {
-               _voto +=  `Membro [@${voto[i].participante.split('@')[0]}] votou em: ${voto[i].votacao}`
-                _p.push(voto[i].participante)
-            }
-            _p.push(_votos[0].votos, _votos[0].votos2)
-            mentions(_voto,_p,true)
-         }
-       }
-    }	
 
 if(isBotGroupAdmins && isGroupAdmins && body === "apaga") {
     if(!menc_prt) return;
@@ -1170,7 +1118,7 @@ if(isCmd && !info.message?.reactionMessage?.text && dattofc != SYSTEM_COIN.Verif
        Object.assign(RG_US.chances, {"cassino": 0, "minerar": 0, "bet": 0});
        CoinsUpdate(RG_SCOINS);
   }
-}
+  }
 
   if(isGroup && fs.existsSync(`./arquivos/database/groups/games/anagrama/${from}.json`)){
     let dataA = JSON.parse(fs.readFileSync(`./arquivos/database/groups/games/anagrama/${from}.json`))
@@ -1235,7 +1183,63 @@ if(isCmd && !info.message?.reactionMessage?.text && dattofc != SYSTEM_COIN.Verif
     }
     }
     
-/* Detectar a fixação de Mensagens */
+    if(isGroup && fs.existsSync(`./arquivos/database/groups/games/wmusic/${from}.json`)){
+    whatMusic = JSON.parse(fs.readFileSync(`./arquivos/database/groups/games/wmusic/${from}.json`))
+    if(budy.slice(0,4).toUpperCase() == whatMusic.resposta.slice(0,4).toUpperCase() && budy.toUpperCase() != whatMusic.resposta) return reply('Tá perto hein! Tente novamente...')
+    if(budy.toUpperCase() == whatMusic.resposta) { 
+    yurizin.sendMessage(from,{text: `• Resposta Correta: *${whatMusic.resposta}*\nParabéns ${pushname}, como recompensa você acaba de ganhar 5 S-Coins. Iniciando o próximo jogo em 5 segundos!`}, {"mentionedJid": [sender]}, {quoted: info}); fs.unlinkSync(`./arquivos/database/groups/games/wmusic/${from}.json`);
+    setTimeout(async() => {
+    fs.writeFileSync(`./arquivos/database/groups/games/wmusic/${from}.json`, `${JSON.stringify(whatMusicAr[Math.floor(Math.random() * whatMusicAr.length)])}`)
+    wmusic = JSON.parse(fs.readFileSync(`./arquivos/database/groups/games/wmusic/${from}.json`))
+    textM = `🎶🎧 𝐖𝐇𝐀𝐓 𝐌𝐔𝐒𝐈𝐂? 😱💡\n–\n${wmusic.trechoMusic}\n–\n🤔😱 Qual música pertence o trecho apresentado acima?\n• ${II}Dica:${II} ${wmusic.dica}`
+    await yurizin.sendMessage(from, {text: textM}, {quoted: selo})
+    }, 5000)
+    }
+    }
+    
+/* [ANTI DELETE] -- [BY HIUDY] */
+    if(isGroup && info.message.protocolMessage && info.message.protocolMessage.type === 0 && isAntiDel) {
+      const msg = messagesCache.get(info.message.protocolMessage.key.id);
+      if(!msg) return;
+      const clone = JSON.parse(JSON.stringify(msg).replaceAll('conversation', 'text').replaceAll('Message', ''));
+      for (const key in clone) {
+        const media = clone[key];
+        if (media && typeof media === 'object' && media.url) {
+        clone[key] = { url: media.url };
+          for (const subkey in media) {
+            if (subkey !== 'url') {
+            clone[subkey] = media[subkey];
+            }
+          }
+        }
+      }
+      await yurizin.sendMessage(from, clone);
+    };
+    
+    
+/* ------ [ Revelar | Visualização Única ] ------ */
+if(isX9VisuUnica) {
+if(type == "viewOnceMessageV2" || type == "viewOnceMessage" || type == "viewOnceMessageV2Extension") {
+if(JSON.stringify(info).includes("videoMessage")) {
+var msg_p = info.message?.viewOnceMessageV2?.message?.videoMessage || info.message?.viewOnceMessage?.message?.videoMessage
+msg_p.viewOnce = false; // Muda o true para false, encaminhando a mídia normamente.
+msg_p.video = {url: msg_p.url} // Envia o vídeo.
+await yurizin.sendMessage(from, msg_p, {quoted: info});
+} else if(JSON.stringify(info).includes("imageMessage")) {
+var msg_p = info.message?.viewOnceMessageV2?.message?.imageMessage || info.message?.viewOnceMessage?.message?.imageMessage
+msg_p.viewOnce = false; // Muda o true para false, encaminhando a mídia normamente.
+msg_p.image = {url: msg_p.url}; // Envia a imagem.
+await yurizin.sendMessage(from, msg_p, {quoted: info});
+} else if(JSON.stringify(info).includes("audioMessage")) {
+var msg_p = info.message?.viewOnceMessageV2Extension?.message?.audioMessage || info.message?.viewOnceMessageV2Extension?.message?.audioMessage
+msg_p.viewOnce = false; // Muda o true para false, encaminhando a mídia normamente.
+msg_p.audio = {url: msg_p.url}; // Envia o áudio.
+await yurizin.sendMessage(from, msg_p, {quoted: info});
+}
+}
+}
+
+/* ----- [ Detectar a fixação de Mensagens ] ---- */
 if (isx9 && type === "pinInChatMessage") {
     duration = info.message?.messageContextInfo?.messageAddOnDurationInSecs;
     fixedTime = (duration) => (duration === 0) ? "0" : (duration >= 30 * 24 * 60 * 60) ? "30 dias" : (duration >= 7 * 24 * 60 * 60) ? "7 dias" : (duration >= 24 * 60 * 60) ? "24 horas" : duration;
@@ -1288,8 +1292,8 @@ yurizin.sendImageAsSticker = async (jid, path, options = {}) => {
 let isCodeKey = Array('aluguel', 'alugueis', 'alugar', 'alugarbot', 'loja', 'dono').some(i => i === command);
 
 if(isGroup && isModoAluguel && isCmd && !SoDono && !isCodeKey) {
-if(!JSON.stringify(grupos).includes("Yuri-Bot-oficial")) {
-grupos.push({id: "Yuri-Bot-oficial", gps: []})
+if(!JSON.stringify(grupos).includes("yurizin-bot-oficial")) {
+grupos.push({id: "yurizin-bot-oficial", gps: []})
 fs.writeFileSync("./arquivos/database/groups/aluguel/grupos.json", JSON.stringify(grupos, null, 2))}
 if(!JSON.stringify(grupos).includes(from)) {
 grupos.push({id: from, limite: 5, validado: false})
@@ -1320,8 +1324,8 @@ AD = chaves.map(i => i.key).indexOf(caixa[0])
 timeday = chaves[AD].dias
 pessoa = chaves[AD].cliente
 infinity = chaves[AD].dias > 0 ? false : true
-if(!VerificarJSON(grupos, "Yuri-Bot-oficial")) {
-grupos.push({id: "Yuri-Bot-oficial", gps: []})
+if(!VerificarJSON(grupos, "yurizin-bot-oficial")) {
+grupos.push({id: "yurizin-bot-oficial", gps: []})
 fs.writeFileSync("./arquivos/database/groups/aluguel/grupos.json", JSON.stringify(grupos, null, 2))
 }
 if(!VerificarJSON(grupos, from)) {
@@ -1358,7 +1362,7 @@ await yurizin.sendMessage(nmrdn, {text: `🔑 - O código de aluguel foi verific
 }
         
 if(chaves[AD].tipo == 2 && isGroup) {
-CD = grupos.map(i => i.id).indexOf("Yuri-Bot-oficial")
+CD = grupos.map(i => i.id).indexOf("yurizin-bot-oficial")
 if(!VerificarJSON(grupos[CD].gps, from)) {
 if(!VerificarJSON(aluguel, from)) {
 grupos[CD].gps.push({id: from})
@@ -1639,7 +1643,7 @@ break
 
 case 'delcoderent':
 if(!SoDono) return reply(mess.onlyOwner())
-if(!JSON.stringify(chaves).includes("Yuri-Bot-oficial")) return reply(`Não há chaves registradas.`)
+if(!JSON.stringify(chaves).includes("yurizin-bot-oficial")) return reply(`Não há chaves registradas.`)
 if(!q) return reply(`Cadê o código de aluguel que você deseja apagar?`)
 if(!JSON.stringify(chaves).includes(q)) return reply("O código não foi encontrado em nosso banco de dados, é inexistente!")
 AD = chaves.map(i => i.key).indexOf(q)
@@ -1786,54 +1790,183 @@ reply(`O verificado foi ativado, ou seja, o selo foi colocado em todos os meus c
 }
 break
 
-case 'menu':
-await reagir(from, "🍅");
-await yurizin.sendMessage(from, {image: {url: images["Main"].value}, caption: linguagem.menu(prefix, NomeDoBot, sender, ownerName, packname), mentions: [sender]}, {quoted: selo})
-break 
-
-case 'menu-completo':
-await reagir(from, "🍅");
-await yurizin.sendMessage(from, {image: {url: images["Main"].value}, caption: linguagem.menu(prefix, NomeDoBot, sender, ownerName, packname), mentions: [sender]}, {quoted: selo})
+case 'channel':
+await reply("https://whatsapp.com/channel/0029VbB1xPvAzNc0AREnyw3R", {reagir: "😻", exec: true});
 break
 
-case 'logos': case 'menulogo': case 'menulogos':  
-await reagir(from, "🎨");
-await yurizin.sendMessage(from, {image: {url: images["Main"].value}, caption: linguagem.menulogos(prefix, NomeDoBot, sender, ownerName, packname), mentions: [sender]}, {quoted: selo})
+case 'botoes': 
+case 'buttons':
+if(!SoDono) return reply(mess.onlyOwner())
+if(!isbuttons) {
+definitions.buttons["status"] = true
+fs.writeFileSync('./settings/definitions.json', JSON.stringify(definitions, null, 2))
+reply("Os botoes foi ativado com sucesso...")
+} else if(isbuttons) {
+definitions.buttons["status"] = false
+fs.writeFileSync('./settings/definitions.json', JSON.stringify(definitions, null, 2))
+reply("Os botoes foi desativado com sucesso...")
+}
+break
+
+case 'menu':
+case 'menulist':
+await reagir(from, "💧");
+if (isButtons) {
+await yurizin.sendMessage(from, {
+image: { url: images["Main"].value },
+caption: `💧﹚𝙼𝙴𝙽𝚄 𝙻𝙸𝚂𝚃﹙💧\n\n𝚄𝚂𝚄𝙰𝚁𝙸𝙾: *@${sender.split("@")[0]}*\n𝙲𝙰𝚁𝙶𝙾: ${isCargo}\n𝙲𝙾𝙽𝚃𝙴𝙼 𝚅𝙸𝙿: ${isChPremium}\n𝚅𝙴𝚁𝚂𝙰𝙾: ${packname.version} - ${packname.update_date}\n𝙳𝙸𝚂𝙿𝙾𝚂𝙸𝚃𝙸𝚅𝙾: ${adivinha}`,
+footer: "𝐂𝐫𝐞𝐚𝐭𝐞𝐝 𝐁𝐲 𝐘𝐮𝐫𝐢 𝐌𝐨𝐝𝐳",
+mentions: [sender],
+buttons: [
+  {
+    buttonId: 'action',
+    buttonText: {
+      displayText: 'interactive meta'
+    },
+    type: 4,
+    nativeFlowInfo: {
+      name: 'single_select',
+      paramsJson: JSON.stringify({
+        title: '💧﹚ 𝐌𝐄𝐍𝐔 𝐋𝐈𝐒𝐓 ﹙💧',
+        sections: [
+          {
+            title: 'Selecione o menu abaixo',
+            highlight_label: '',
+            rows: [
+              {
+                header: '💧﹚ 𝐌𝐄𝐍𝐔 𝐁𝐀𝐒𝐈𝐂𝐎 ﹙💧',
+                title: 'ぁ Yuri Supremacy Oficial ぁ',
+                description: 'Comandos básicos do bot.',
+                id: prefix + 'menu-completo',
+              },
+              {
+                header: '💧﹚ 𝐌𝐄𝐍𝐔 𝐁𝐑𝐈𝐍𝐂𝐀𝐃𝐄𝐈𝐑𝐀𝐒 ﹙💧',
+                title: 'ぁ Yuri Supremacy Oficial ぁ',
+                description: 'Jogos e brincadeiras interativas.',
+                id: prefix + 'brincadeiras'
+              },
+              {
+                header: '💧﹚ 𝐌𝐄𝐍𝐔 𝐀𝐋𝐓𝐄𝐑𝐀𝐃𝐎𝐑𝐄𝐒 ﹙💧',
+                title: 'ぁ Yuri Supremacy Oficial ぁ',
+                description: 'Alteradores de áudios, etc.',
+                id: prefix + 'brincadeiras'
+              },
+              {
+                header: '💧﹚ 𝐌𝐄𝐍𝐔 𝐋𝐎𝐆𝐎𝐒 ﹙💧',
+                title: 'ぁ Yuri Supremacy Oficial ぁ',
+                description: 'Criação de logos personalizadas.',
+                id: prefix + 'menulogos'
+              },
+              {
+                header: '💧﹚ 𝐌𝐄𝐍𝐔 𝐃𝐎𝐍𝐎 ﹙💧',
+                title: 'ぁ Yuri Supremacy Oficial ぁ',
+                description: 'Funções exclusivas para o dono do bot.',
+                id: prefix + 'menudono'
+              },
+              {
+                header: '💧﹚ 𝐌𝐄𝐍𝐔 𝐀𝐃𝐌 ﹙💧',
+                title: 'ぁ Yuri Supremacy Oficial ぁ',
+                description: 'Menu para administradores do grupo.',
+                id: prefix + 'menuadm'
+              },
+              {
+                header: '💧﹚ 𝐌𝐄𝐍𝐔 𝐂𝐎𝐈𝐍𝐒 ﹙💧',
+                title: 'ぁ Yuri Supremacy Oficial ぁ',
+                description: 'Sistema de coins e aventuras.',
+                id: prefix + 'modocoins'
+              },
+              {
+                header: '💧﹚ 𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃𝐒 ﹙💧',
+                title: 'ぁ Yuri Supremacy Oficial ぁ',
+                description: 'Downloads rápidos e automáticos!',
+                id: prefix + 'download'
+              },
+              {
+                header: '💧﹚ 𝐌𝐄𝐍𝐔 𝐅𝐑𝐄𝐄 𝐅𝐈𝐑𝐄 ﹙💧',
+                title: 'ぁ Yuri Supremacy Oficial ぁ',
+                description: 'Informações completas da sua conta Free Fire.',
+                id: prefix + 'freefire'
+              },
+              {
+                header: '💧﹚ 𝐌𝐄𝐍𝐔 𝐕𝐈𝐏 ﹙💧',
+                title: 'ぁ Yuri Supremacy Oficial ぁ',
+                description: 'Funções exclusivas para membros VIP.',
+                id: prefix + 'menuprem'
+              }
+            ]
+          }
+        ]
+      })
+    }
+  }
+],
+headerType: 1,
+viewOnce: true
+}, { quoted: info })
+} else {
+await yurizin.sendMessage(from, {
+image: { url: images["Main"].value },
+caption: linguagem.menu(sender, prefix, NomeDoBot, ownerName),
+mentions: [sender]
+}, { quoted: selo })
+}
+break;
+
+
+case 'menu-completo':
+  await reagir(from, "💧");
+await yurizin.sendMessage(from, {image: {url: images["Main"].value}, caption: linguagem.menu(sender, prefix, NomeDoBot, ownerName), mentions: [sender]}, {quoted: selo})
 break 
 
-case 'menuadm': case 'menuadms': case 'adm':  
-await reagir(from, "⚔️");
-await yurizin.sendMessage(from, {image: {url: images["Main"].value}, caption: linguagem.adms(prefix, NomeDoBot, sender, ownerName, packname), mentions: [sender]}, {quoted: selo})
+
+case 'logos': case 'menulogo': case 'menulogos':  
+await reagir(from, "🪄");
+await yurizin.sendMessage(from, {image: {url: images["Main"].value}, caption: linguagem.menulogos(sender, prefix, NomeDoBot, ownerName), mentions: [sender]}, {quoted: selo})
 break 
+
+
+case 'menuadm': case 'menuadms': case 'adm':  
+await reagir(from, "⚜️");
+await yurizin.sendMessage(from, {image: {url: images["Main"].value}, caption: linguagem.adms(sender, prefix, NomeDoBot, ownerName), mentions: [sender]}, {quoted: selo})
+break 
+
 
 case 'menudono': case 'donomenu':  
 await reagir(from, "👑");
-await yurizin.sendMessage(from, {image: {url: images["Main"].value}, caption: linguagem.menudono(prefix, NomeDoBot, sender, ownerName, packname), mentions: [sender]}, {quoted: selo})
+await yurizin.sendMessage(from, {image: {url: images["Main"].value}, caption: linguagem.menudono(sender, prefix, NomeDoBot, ownerName), mentions: [sender]}, {quoted: selo})
 break 
 
-case 'efeitosimg': case 'efeitos': case 'efeitoimg': case 'efeitosmarcar':
-await reagir(from, "🖼️");
-await yurizin.sendMessage(from, {image: {url: images["Main"].value}, caption: linguagem.efeitos(prefix, NomeDoBot, sender, ownerName, packname), mentions: [sender]}, {quoted: selo})
+
+case 'menufreefire': case 'freefire':
+await reagir(from, "🪖");
+await yurizin.sendMessage(from, {image: {url: images["Main"].value}, caption: linguagem.freefire(sender, prefix, NomeDoBot, ownerName), mentions: [sender]}, {quoted: selo})
 break
 
-case 'menusabcity': 
-case 'menurpg':
-case 'menucoins':
-await reagir(from, "🪙");
-await yurizin.sendMessage(from, {image: {url: images["Main"].value}, caption: linguagem.menusabcity(prefix, NomeDoBot, sender, ownerName, packname), mentions: [sender]}, {quoted: selo})
+case 'download': case 'menudown':
+await reagir(from, "📥");
+await yurizin.sendMessage(from, {image: {url: images["Main"].value}, caption: linguagem.download(sender, prefix, NomeDoBot, ownerName), mentions: [sender]}, {quoted: selo})
 break
+
+
+case 'menusabcity': case 'menurpg':
+await reagir(from, "💰");
+await yurizin.sendMessage(from, {image: {url: images["Main"].value}, caption: linguagem.menusabcity(sender, prefix, NomeDoBot, ownerName), mentions: [sender]}, {quoted: selo})
+break
+
 
 case 'alteradores':
-await reagir(from, "🎤");
-await yurizin.sendMessage(from, {image: {url: images["Main"].value}, caption: linguagem.alteradores(prefix, NomeDoBot, sender, ownerName, packname), mentions: [sender]}, {quoted: selo})
+await reagir(from, "🎬");
+await yurizin.sendMessage(from, {image: {url: images["Main"].value}, caption: linguagem.alteradores(sender, prefix, NomeDoBot, ownerName), mentions: [sender]}, {quoted: selo})
 break 
+
 
 case 'brincadeiras':
 case 'brincadeira':
 if(!isModobn) return reply(mess.onlyGroupFun(prefix))  
-await reagir(from, "😂");
-await yurizin.sendMessage(from, {image: {url: images["Main"].value}, caption: linguagem.brincadeiras(prefix, NomeDoBot, sender, ownerName, packname), mentions: [sender]}, {quoted: selo})
+await reagir(from, "⛱️");
+await yurizin.sendMessage(from, {image: {url: images["Main"].value}, caption: linguagem.brincadeiras(sender, prefix, NomeDoBot, ownerName), mentions: [sender]}, {quoted: selo})
 break 
+
 
 case 'menupremium':
 case 'menuprem': 
@@ -1842,8 +1975,9 @@ await reagir(from, "💎");
 await yurizin.sendMessage(from, {image: {url: images["Main"].value}, caption: linguagem.menuprem(premiumCmd, prefix, NomeDoBot, sender, ownerName, packname, capitalizeFirstLetter), mentions: [sender]}, {quoted: selo})
 break 
 
+
 case 'owner': case 'odono': case 'dono': case 'infodono':  
-await reagir(from, "📇");
+await reagir(from, "⚔️");
 numerodn = numerodonos_ofc
 await yurizin.sendMessage(from, {image: {url: images["Main"].value}, caption: getInfo.infoOwner(prefix, ownerName, numerodn, NomeDoBot, sender), mentions: [sender]}, {quoted: selo})
 break 
@@ -1853,7 +1987,6 @@ await yurizin.sendMessage(from, {text: getInfo.tutorialBasic(prefix), contextInf
 break
 
 case 'criador': case 'suporte-dono':
-await reagir(from, "🧑‍💻");
 let vcard = 'BEGIN:VCARD\n' + 'VERSION:3.0\n' + 'N:;Yuri Modz;;;\n' + 'FN:Yuri Modz\n' + 'item1.TEL;waid=556593065507:+55 65 9306-5507\n' + 'item1.X-ABLabel:Celular\n' + 'END:VCARD'
 await yurizin.sendMessage(from, {contacts: {displayName: 'Yuri Modz', contacts: [{vcard}]}})
 reply(`O contato dele caso você use imune: https://wa.me/556593065507`);
@@ -1883,12 +2016,45 @@ case 'infobv': case 'infowelcome': case 'infobemvindo':
 await yurizin.sendMessage(from, {text: getInfo.bemvindo(prefix)}, {quoted: selo})
 break
 case 'destrava':
-await reagir(from, "🧩");
 await yurizin.sendMessage(from, {text: destrava(prefix)}, {quoted: selo})
 break 
 
 case 'perfil':
-await reagir(from, "👤");
+try{
+let ppimg;
+try{ppimg=await yurizin.profilePictureUrl(`${sender.split('@')[0]}@c.us`,'image')}
+catch{const pr=await axios.get(`https://tinyurl.com/api-create.php?url=${images['defaultProfile'].value}`);ppimg=pr.data}
+let status;
+try{status=(await yurizin.fetchStatus(sender)).status}
+catch{status="Não foi possível obter a biografia."}
+const nivelgado=['1','2','3','4','5','6','7','8','9'],nivelgado2=['1','2','3','4','5','6','7','8','9'],nivelgador=nivelgado[Math.floor(Math.random()*nivelgado.length)],nivelgado2r=nivelgado2[Math.floor(Math.random()*nivelgado2.length)];
+const puta=['1','2','3','4','5','6','7','8','9'],puta2=['1','2','3','4','5','6','7','8','9'],putar=puta[Math.floor(Math.random()*puta.length)],putar2=puta2[Math.floor(Math.random()*puta2.length)];
+const gostosura=['1','2','3','4','5','6','7','8','9'],gostosura2=['1','2','3','4','5','6','7','8','9'],gostosurar=gostosura[Math.floor(Math.random()*gostosura.length)],gostosurar2=gostosura2[Math.floor(Math.random()*gostosura2.length)];
+const programa=Math.ceil(Math.random()*10000);
+const legenda=mess.profileInformation(pushname,sender,info,putar,putar2,gostosurar,gostosurar2,nivelgador,nivelgado2r,programa,status);
+if(isButtons){
+await yurizin.sendMessage(from,{
+image:{url:ppimg},
+caption:legenda,
+buttons:[
+{buttonId:`${prefix}perfil`,buttonText:{displayText:"💧﹚𝐏𝐄𝐑𝐅𝐈𝐋﹙💧"}}
+],
+footer:'𝐂𝐫𝐞𝐚𝐭𝐞𝐝 𝐁𝐲 𝐘𝐮𝐫𝐢 𝐌𝐨𝐝𝐳',
+headerType:6,
+viewOnce:true
+},{quoted:selo})
+}else{
+await yurizin.sendMessage(from,{image:{url:ppimg},caption:legenda,mentions:[sender]},{quoted:selo})
+}
+}catch(e){
+reply('❌ Ocorreu um erro ao exibir o perfil.')
+}
+break;
+
+
+/*
+
+case 'perfil':
 try {
 ppimg = await yurizin.profilePictureUrl(`${sender.split('@')[0]}@c.us`, 'image')
 } catch {
@@ -1917,36 +2083,6 @@ const programa = Math.ceil(Math.random() * 10000)
 await yurizin.sendMessage(from, {image: {url: ppimg}, caption: mess.profileInformation(pushname, sender, info, putar, putar2, gostosurar, gostosurar2, nivelgador, nivelgado2r, programa, status), mentions: [sender]}, {quoted: selo})
 break
 
-/*
-case 'rch': {
- if (!q) {
- return reply(`Precido de um link da mensagem, exemplo::\n${prefix}rch https://whatsapp.com/channel/xxxx palor`);}
- if (!q.startsWith("https://whatsapp.com/channel/")) {
- return reply("Link inválido!");}
- const hurufGaya = {
- a: '🅐', b: '🅑', c: '🅒', d: '🅓', e: '🅔', f: '🅕', g: '🅖',
- h: '🅗', i: '🅘', j: '🅙', k: '🅚', l: '🅛', m: '🅜', n: '🅝',
- o: '🅞', p: '🅟', q: '🅠', r: '🅡', s: '🅢', t: '🅣', u: '🅤',
- v: '🅥', w: '🅦', x: '🅧', y: '🅨', z: '🅩',
- '0': '⓿', '1': '➊', '2': '➋', '3': '➌', '4': '➍',
- '5': '➎', '6': '➏', '7': '➐', '8': '➑', '9': '➒' };
- const emojiInput = args.slice(1).join(' ').toLowerCase();
- const emoji = emojiInput.split('').map(c => {
- if (c === ' ') return '―';
- return hurufGaya[c] || c;
- }).join('');
- try {
- const link = args[0];
- const channelId = link.split('/')[4];
- const messageId = link.split('/')[5];
- const res = await yurizin.newsletterMetadata("invite", channelId);
- await yurizin.newsletterReactMessage(res.id, messageId, emoji);
- return reply(`Enviou reação *${emoji}* para a mensagem no canal *${res.name}.*`);
- } catch (e) {
- console.error(e);
- return reply("Falha ao enviar reação. Certifique-se de que o link e o emoji são válidos.");
- }}
-break
 */
 
 case 'tabela':
@@ -2125,7 +2261,7 @@ if(args.length < 1) return reply(`🤔 Hmm, você parece que está usando de for
 groupI = await yurizin.groupMetadata(from);
 if(args[0] === '--help') return await mention(mess.helpGroupSettings(prefix, sender));
 if (args[0] === '-open' || args[0] === 'a') {
-if(groupI.announce == false) return await reply('O grupo já está aberto, não é possível solicitar para abrir o que já aberto.', {reagir: "✅"});
+if(groupI.announce == false) return await reply('O grupo já está aberto, não é possível solicitar para abrir o que já aberto.', {reagir: "😸"});
 await reply('O grupo acaba de ser aberto com êxito na execução do pedido...', {reagir: "🔓"});
 await yurizin.groupSettingUpdate(from, 'not_announcement');
 } else if(args[0] === '-close' || args[0] === 'f') {
@@ -2133,12 +2269,12 @@ if(groupI.announce == true) return reply('O grupo já está fechado, não é pos
 await reply('O grupo acaba de ser fechado com êxito na execução do pedido...', {reagir: "🔒"});
 await yurizin.groupSettingUpdate(from, 'announcement');
 } else if(args[0] === '-livre') {
-if (groupI.restrict == false) return await reply('O grupo não possuí nenhuma restrição de alteração nos dados, ou seja, todos podem alterar.', {reagir: "✅"});
-await reply('A partir de agora, todos os membros tem a permissão de editar as configurações do grupo.', {reagir: "✅"});
+if (groupI.restrict == false) return await reply('O grupo não possuí nenhuma restrição de alteração nos dados, ou seja, todos podem alterar.', {reagir: "😸"});
+await reply('A partir de agora, todos os membros tem a permissão de editar as configurações do grupo.', {reagir: "😸"});
 await yurizin.groupSettingUpdate(from, 'unlocked');
 } else if(args[0] === '-private') {
-if (groupI.restrict == true) return await reply('O grupo já possuí a restrição aos administradores! Então, não tem como ativar duas vezes.', {reagir: "✅"});
-await reply('A partir de agora, somente os administradores do barzinho tem a permissão de editar os configurações do grupo.', {reagir: "✅"});
+if (groupI.restrict == true) return await reply('O grupo já possuí a restrição aos administradores! Então, não tem como ativar duas vezes.', {reagir: "😸"});
+await reply('A partir de agora, somente os administradores do barzinho tem a permissão de editar os configurações do grupo.', {reagir: "😸"});
 await yurizin.groupSettingUpdate(from, 'locked');
 }
 break 
@@ -2156,6 +2292,7 @@ try {
     var ppUrl = `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQH8bC8B5Cwle4BcA3o9Pk-3_fzYrUMTvgF6A&s` 
 };
 var puxarInfo = await yurizin.groupMetadata(from)
+console.log(puxarInfo)
 var returnAnnounce = puxarInfo.announce === false ? "Sim" : puxarInfo.announce === true ? "Não" : undefined;
 var returnRestrict = puxarInfo.restrict === false ? "Sim" : puxarInfo.restrict === true ? "Não" : undefined;
 var memberAddMode = puxarInfo.memberAddMode === false ? "Não" : puxarInfo.memberAddMode === true ? "Sim" : undefined;
@@ -2222,12 +2359,12 @@ break
 
 case 'reviverqr':
 if(!SoDono) return reply(mess.onlyOwner())
-exec(`cd ${qrcode} && rm -rf pre-key* sender* session*`);
+exec(`cd ${qrcode} && rm -rf pre-key* sender* session*`)
 setTimeout(async () => {
     await reply("Reiniciando...")
-    setTimeout(async () => {
-        process.exit()
-    }, 1200)
+ setTimeout(async () => {
+    process.exit()
+ }, 1200)
 }, 1000)
 break
 
@@ -2448,6 +2585,63 @@ var MRC_TD = groupMembers.map(i => i.id);
   }
 await yurizin.sendMessage(from, options).catch(() => reply('Erro! Não foi possível mencionar os participantes, talvez a mensagem que foi atribuída ao comando pode ter ocorrido um erro na leitura. Tente com outra mídia, caso o erro persista entre em contato com o proprietário do BOT e solucione!'));
 break
+
+case 'envpv':
+case 'pv': {
+  if (!isGroup) return reply("Somente em grupos!");
+  if (!menc_prt) return reply("Marque uma mídia ou uma mensagem para que eu possa enviar em seu privado.");
+
+  let DFC = "";
+  const rsm = info.message?.extendedTextMessage?.contextInfo?.quotedMessage;
+
+  const pink = isQuotedImage ? rsm?.imageMessage : info.message?.imageMessage;
+  const blue = isQuotedVideo ? rsm?.videoMessage : info.message?.videoMessage;
+  const purple = isQuotedDocument ? rsm?.documentMessage : info.message?.documentMessage;
+  const yellow = isQuotedDocW ? rsm?.documentWithCaptionMessage?.message?.documentMessage : info.message?.documentWithCaptionMessage?.message?.documentMessage;
+  const aud_d = isQuotedAudio ? rsm?.audioMessage : null;
+  const figu_d = isQuotedSticker ? rsm?.stickerMessage : null;
+  const red = isQuotedMsg && !aud_d && !figu_d && !pink && !blue && !purple && !yellow ? rsm?.conversation : info.message?.conversation;
+  const green = rsm?.extendedTextMessage?.text || info.message?.extendedTextMessage?.text;
+
+  if (pink && !aud_d && !purple) {
+    DFC = pink;
+    pink.caption = q.length > 1 ? "É o Yurizin 💙" : pink.caption?.replace(new RegExp(prefix + command, "gi"), "É o Yurizin 💙");
+    pink.image = { url: pink.url };
+  } else if (blue && !aud_d && !purple) {
+    DFC = blue;
+    blue.caption = q.length > 1 ? "É o Yurizin 💙" + q.trim() : blue.caption?.replace(new RegExp(prefix + command, "gi"), "É o Yurizin 💙").trim();
+    blue.video = { url: blue.url };
+  } else if (red && !aud_d && !purple) {
+    DFC = { text: red.replace(new RegExp(prefix + command, "gi"), "É o Yurizin 💙").trim() };
+  } else if (!aud_d && !figu_d && green && !purple) {
+    DFC = { text: green.replace(new RegExp(prefix + command, "gi"), "É o Yurizin 💙").trim() };
+  } else if (purple) {
+    DFC = purple;
+    purple.document = { url: purple.url };
+  } else if (yellow && !aud_d) {
+    DFC = yellow;
+    yellow.caption = q.length > 1 ? "É o Yurizin 💙" + q.trim() : yellow.caption?.replace(new RegExp(prefix + command, "gi"), "É o Yurizin 💙").trim();
+    yellow.document = { url: yellow.url };
+  } else if (figu_d && !aud_d) {
+    DFC = figu_d;
+    figu_d.sticker = { url: figu_d.url };
+  } else if (aud_d) {
+    DFC = aud_d;
+    aud_d.audio = { url: aud_d.url };
+    aud_d.ptt = true;
+  } else {
+    return reply("Não foi possível identificar o conteúdo para enviar.");
+  }
+
+  reply("Enviando, olha meu privado. ✅");
+
+  await yurizin.sendMessage(sender, DFC, { quoted: selo }).catch(e => {
+    console.log(e);
+    reply("Erro ao enviar a mensagem no privado.");
+  });
+}
+break;
+
 
 case 'correio':
 txt = args.join(" ")
@@ -2960,12 +3154,33 @@ bla = isGroup ? info.key.participant : info.key.remoteJid
 reply(bla)
 break
 
+/*
 case 'ping': 
-await yurizin.sendMessage(from, {react: {text: `🏃🏻‍♀️`, key: info.key}})
+await yurizin.sendMessage(from, {react: {text: `⚡`, key: info.key}})
 const speedConverted = (Date.now() / 1000) - info.messageTimestamp;
 yurizin.sendMessage(from, {text: mess.speed(speedConverted, os, TimeCount)}, {quoted: selo});
-break                 
-                  
+break      
+*/
+
+case 'ping':
+await yurizin.sendMessage(from,{react:{text:`⚡`,key:info.key}});
+const speedConverted=(Date.now()/1000)-info.messageTimestamp;
+const mensagemPing=mess.speed(speedConverted,os,TimeCount);
+if(isButtons){
+await yurizin.sendMessage(from,{
+text:mensagemPing,
+buttons:[
+{buttonId:`${prefix}menulist`,buttonText:{displayText:"💧﹚𝐌𝐄𝐍𝐔﹙💧"},type:1},
+{buttonId:`${prefix}perfil`,buttonText:{displayText:"💧﹚𝐏𝐄𝐑𝐅𝐈𝐋﹙💧"},type:1}
+],
+footer:'𝐂𝐫𝐞𝐚𝐭𝐞𝐝 𝐁𝐲 𝐘𝐮𝐫𝐢 𝐌𝐨𝐝𝐳',
+headerType:1
+},{quoted:selo});
+}else{
+yurizin.sendMessage(from,{text:mensagemPing},{quoted:selo});
+}
+break;
+
 case 'gtts':
 try {
 if (args.length < 1) return await yurizin.sendMessage(from,{text: `Cade o texto?, digite algo Exemplo:\n${prefix}gtts PT Oi`}, {quoted: selo})
@@ -2993,12 +3208,51 @@ const tagme = `@${sender.split("@")[0]} ✔️`
 await mentions(tagme, [sender], true)
 break
 
+/*
+case 'avalie':
+  if (!isCmd && info?.message?.listResponseMessage) {
+    const estrela = info.message.listResponseMessage.title || "0";
+    const nota = parseInt(estrela);
+
+    if (nota >= 1 && nota <= 5) {
+      const msg = `⭐ Avaliação recebida com sucesso!\n\n🎖️ *Nota:* ${"⭐".repeat(nota)}\nObrigado por avaliar o bot! Digite agora sua opinião com:\n*${prefix}avalie Sua opinião aqui...*`;
+      return await yurizin.sendMessage(from, { text: msg }, { quoted: selo });
+    }
+  }
+
+  if (q.length < 1) return await yurizin.sendMessage(from, {
+    text: `🌟 Por favor, avalie o bot antes com uma nota de 1 a 5 estrelas:`,
+    footer: 'Escolha sua nota de avaliação!',
+    title: '🤖 Avaliação do Bot',
+    buttonText: 'Selecionar nota',
+    sections: [
+      {
+        title: "Escolha sua avaliação:",
+        rows: [
+          { title: "⭐ 1 Estrela", rowId: `${prefix}avalie`, description: "Muito ruim 😞" },
+          { title: "⭐⭐ 2 Estrelas", rowId: `${prefix}avalie`, description: "Ruim 😐" },
+          { title: "⭐⭐⭐ 3 Estrelas", rowId: `${prefix}avalie`, description: "Mediano 🤔" },
+          { title: "⭐⭐⭐⭐ 4 Estrelas", rowId: `${prefix}avalie`, description: "Bom 😊" },
+          { title: "⭐⭐⭐⭐⭐ 5 Estrelas", rowId: `${prefix}avalie`, description: "Excelente 🤩" }
+        ]
+      }
+    ]
+  }, { quoted: selo });
+
+  if (q.length > 400) return reply(`Você *ultrapassou* o máximo de 400 caracteres.`);
+
+  await sendMentions(nmrdn, `📚🌟 *[Avaliação]* - Recebi uma avaliação do(a) usuário(a): *@${sender.split("@")[0]}*\n- Detalhes: _“${q}”_`);
+  await sendMentions(from, `Olá *@${sender.split("@")[0]}*, enviei sua avaliação para um dos meus superiores! Agradeço pelo uso contínuo de mim e pela avaliação, vamos melhorar a cada dia sempre! 🌟🤖`);
+break;
+*/
+
 case 'avalie':
 if(q.length < 1) return reply(`Exemplo: *${prefix}avalie* _“Bot muito bom, parabéns.”_`);
 if(q.length > 400) return reply(`Você *utrapassou* o máximo de 400 caracteres.`);
 await sendMentions(nmrdn, `📚🌟 *[Avaliação]* - Recebi uma avaliação do(a) usuário(a): *@${sender.split("@")[0]}*\n- Detalhes: _“${q}”_`);
 await sendMentions(from, `Olá *@${sender.split("@")[0]}*, enviei sua avaliação para um dos meus superiores! Agradeço pelo uso contínuo de mim e pela avaliação, vamos melhorar a cada dia sempre! 🌟🤖`);
 break
+
 
 case 'bug':
 if(q.length < 1) return reply('Campo vázio? Por favor, descreva o erro ocorrido para ser solucionado pela minha equipe!');
@@ -3139,16 +3393,26 @@ reply(mess.error());
 }
 break
 
-case 'pinterest': 
-if(!q) return reply(mess.noArgsSearch() + `Exemplo: ${prefix + command} Gato`);
-try {
-await reply(mess.wait())
-data = await fetchJson(API_URL + `/api/pesquisa/pinterest?query=${q}&apikey=` + API_KEY_YURI);
-await yurizin.sendMessage(from, {image: { url: data.resultado[0]?.image }, caption: mess. pinterest(data, formatNumberDecimal) }, {quoted: selo});
-} catch(error) {
-await reply(mess.error(), {reagir: "❌"})
-}
-break
+case 'pinterest':
+  if (!q) return reply(mess.noArgsSearch() + `Exemplo: ${prefix + command} Gato`);
+  try {
+    await reply(mess.wait());
+    const data = await fetchJson(API_URL + `/api/pesquisa/pinterest?query=${encodeURIComponent(q)}&apikey=` + API_KEY_YURI);
+    const resultados = data.resultado.slice(0, 5);
+
+    for (let i = 0; i < resultados.length; i++) {
+      const img = resultados[i]?.image;
+      if (!img) continue;
+      await yurizin.sendMessage(from, {
+        image: { url: img },
+        caption: i === 0 ? mess.pinterest(data, formatNumberDecimal) : ''
+      }, { quoted: i === 0 ? selo : null });
+    }
+  } catch (error) {
+    await reply(mess.error(), { reagir: "❌" });
+  }
+  break;
+
 
 case 'wallpaper': case 'papeldeparede':
 if(!q) return reply(mess.noArgsSearch() + `Exemplo: ${prefix + command} Neymar`);
@@ -3303,10 +3567,11 @@ await reply(mess.error(), {reagir: "❌"})
 }
 break
 
+
 case 'gerarlink': 
 try {
 if((isMedia && !info.message.videoMessage || isQuotedImage) && !q.length <= 1) {    
-await reagir(from, "✅"); /* Reação para aguadar o sucesso da solicitação... '✅' */
+await reagir(from, "✅"); 
 boij = isQuotedImage ? JSON.parse(JSON.stringify(info).replace('quotedM','m')).message.extendedTextMessage.contextInfo.message.imageMessage : info.message.imageMessage;
 owgi = await getFileBuffer(boij, 'image');
 UploadServer = await new uploader().catbox(owgi)
@@ -3324,30 +3589,7 @@ reply(`Envie ou responda uma *imagem* ou um *vídeo* com o comando *${prefix+com
 await reply(mess.error(), {reagir: "❌️"});
 }
 break
-
-case 'gerarlink2': 
-try {
-if((isMedia && !info.message.videoMessage || isQuotedImage) && !q.length <= 1) {
-await reagir(from, "🕓");
-boij = isQuotedImage ? JSON.parse(JSON.stringify(info).replace('quotedM','m')).message.extendedTextMessage.contextInfo.message.imageMessage : info.message.imageMessage;
-owgi = await getFileBuffer(boij, 'image');
-UploadServer = await uploader.github(owgi)
-await reply(`• Mídia convertida para URL com sucesso, aqui está:
-*${UploadServer}*`, {reagir: "✅️"})
-} else if((isMedia && info.message.videoMessage.seconds < 30 || isQuotedVideo && info.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage.seconds < 60) && !q.length <= 1) { 
-await reagir(from, "😸");
-boij = isQuotedVideo ? JSON.parse(JSON.stringify(info).replace('quotedM','m')).message.extendedTextMessage.contextInfo.message.videoMessage : info.message.videoMessage;
-owgi = await getFileBuffer(boij, 'video');
-UploadServer = await uploader.github(owgi)
-await reply(`• Mídia convertida para URL com sucesso, aqui está: *${UploadServer}*`, {reagir: "✅️"})
-} else {
-reply(`Envie ou responda uma *imagem* ou um *vídeo* com o comando *${prefix+command}* - Faz upload da mídia para o servidor e após a solicitação retorna o URL!`, {reagir: "❌"});
-};
-} catch(error) {
-await reply(mess.error(), {reagir: "❌️"});
-}
-break
-                
+ 
 case 'amazon': case 'amazonsearch':
 if(q.trim().length < 4) return reply(`NaN, você esqueceu de colocar o nome do produto após o comando.`)
 reply(mess.wait());
@@ -3360,6 +3602,8 @@ return reply(mess.error());
 }
 break
 
+/*
+
 case 'agendage': case 'agenda_futebol':
 try {
 data = await fetchJson(API_URL + `/api/soccer/agenda_jogos?apikey=` + API_KEY_YURI);
@@ -3367,7 +3611,7 @@ get = data.resultado.map((v, index) => {
   subEvent = v.subEvent.map((v1, index1) => `\t• Nome: *${v1.name}*\n\t• Data & Horário: *${new Date(v1.startDate).toLocaleString("pt-BR")}*\n\t• Localização: *${v1.location.name}*`).join(`\n\t—\n`)
   return `> Liga: *${v.name}* (${v.sport})\n• Data - Início: *${new Date(v.startDate).toLocaleString("pt-BR")}*\n• Eventos (Jogos):\n${subEvent}`;
 }).join('\n—\n')
-await reply('> Agenda de Jogos *(GE) - Futebol*:\n—\n' + get, {reagir: "✅"});
+await reply('> Agenda de Jogos *(GE) - Futebol*:\n—\n' + get, {reagir: "😸"});
 } catch(error) {
  return await reply(mess.error(), {reagir: "❌"})
 }
@@ -3453,6 +3697,8 @@ try {
 }
 break
 
+*/
+
 case 'receita': case 'revenue': 
 if (!q) return reply(`NaN, você esqueceu de digitar após o comando.`)
 try {
@@ -3532,7 +3778,7 @@ if(!q) return await reply('Você esqueceu de colocar o nome do app que você des
 try {
 data = await fetchJson(API_URL + `/api/pesquisa/tekmods?query=${q}&apikey=` + API_KEY_YURI);
 if(data.resultado.length == 0) return await reply('Sem resultados!', {reagir: "❌️"});
-await reply(`> 𝐓𝐞𝐤𝐌𝐨𝐝𝐬 - 𝐏𝐞𝐬𝐪𝐮𝐢𝐬𝐚:\n—\n` + data.resultado.map((response, index) => `*[${index+1}]* • Título: ${response.titulo}\n• URL do Aplicativo: *${response.link}*`).join('\n—\n'), {reagir: "✅", eval: true});
+await reply(`> 𝐓𝐞𝐤𝐌𝐨𝐝𝐬 - 𝐏𝐞𝐬𝐪𝐮𝐢𝐬𝐚:\n—\n` + data.resultado.map((response, index) => `*[${index+1}]* • Título: ${response.titulo}\n• URL do Aplicativo: *${response.link}*`).join('\n—\n'), {reagir: "😸", eval: true});
 } catch(error) {
 return await reply(mess.error(), {reagir: "❌"})
 }
@@ -3542,7 +3788,7 @@ case 'cinema':
 try {
 response = await fetchJson(API_URL + `/api/outros/cinema?apikey=` + API_KEY_YURI);
 if(response.resultado.length == 0) return await reply('Sem resultados!', {reagir: "❌️"});
-await reply(`> 🎬 𝐂𝐢𝐧𝐞𝐦𝐚:\n—\n` + response.resultado.map((v, index) => `• *Título:* ${v.title}\n• *Data:* ${v.releaseDate}\n• *Avaliação | Nota:* ${v.rating}/5.0\n• *Direção:* ${v.directors}\n• *Personagens:* ${v.cast || 'Sem informação'}\n• *Sinopse:* ${v.synopsis}`).join('\n—\n'), {reagir: "✅"});
+await reply(`> 🎬 𝐂𝐢𝐧𝐞𝐦𝐚:\n—\n` + response.resultado.map((v, index) => `• *Título:* ${v.title}\n• *Data:* ${v.releaseDate}\n• *Avaliação | Nota:* ${v.rating}/5.0\n• *Direção:* ${v.directors}\n• *Personagens:* ${v.cast || 'Sem informação'}\n• *Sinopse:* ${v.synopsis}`).join('\n—\n'), {reagir: "😸"});
 } catch(error) {
 return await reply(mess.error(), {reagir: "❌"});
 } 
@@ -3553,7 +3799,7 @@ if(q.trim().length < 4) return await reply(`NaN, você esqueceu de colocar o nom
 try {
 response = await fetchJson(API_URL + `/api/lojas/mercadolivre?query=${q}&apikey=` + API_KEY_YURI);
 if(response.resultado.length == 0) return await reply('Sem resultados!', {reagir: "❌️"});
-await reply(`> 🛍 𝐌𝐞𝐫𝐜𝐚𝐝𝐨𝐋𝐢𝐯𝐫𝐞 - 𝐒𝐞𝐚𝐫𝐜𝐡:\n—\n` + response.resultado.map((v, index) => `*[${index+1}]* • Produto: *${v.produto}*\n• URL: *${v.link}*`).join(`\n—\n`), {reagir: "✅"});
+await reply(`> 🛍 𝐌𝐞𝐫𝐜𝐚𝐝𝐨𝐋𝐢𝐯𝐫𝐞 - 𝐒𝐞𝐚𝐫𝐜𝐡:\n—\n` + response.resultado.map((v, index) => `*[${index+1}]* • Produto: *${v.produto}*\n• URL: *${v.link}*`).join(`\n—\n`), {reagir: "😸"});
 } catch(error) {
 return await reply(mess.error(), {reagir: "❌"})
 }
@@ -3575,7 +3821,7 @@ try {
 const fileListINFO = await File.fromURL(q);
 await fileListINFO.loadAttributes(); // Rodar a função para executar o resultado.
 if (fileListINFO.size >= 300000000) return reply(`❌ Infelizmente, não foi possível concluir a ação, *pois o tamanho do arquivo excede o limite máximo de 300MB.*`, {reagir: "❌"});
-await reply(mess.wait(), {reagir: "✅"})
+await reply(mess.wait(), {reagir: "😸"})
 const dataFileBuffer = await fileListINFO.downloadBuffer();
 var { mime } = await FileType.fromBuffer(dataFileBuffer);
 await yurizin.sendMessage(from, {document: dataFileBuffer, caption: `Download Completo! Obrigado por esperar *${pushname}*...`, mimetype: mime, fileName: fileListINFO.name}, {quoted: selo});
@@ -3585,7 +3831,7 @@ await reply(mess.error(), {reagir: '❌'});
 break
 
 case 'encurtalink': case 'tinyurl':
-if(args.length < 1) return reply(`❌️ *Forma incorreta, use está como exemplo:* ${prefix + command} https://instagram.com/Yuribot.wpp`)
+if(args.length < 1) return reply(`❌️ *Forma incorreta, use está como exemplo:* ${prefix + command} https://instagram.com/yurizinbot.wpp`)
 anu = await axios.get(`https://tinyurl.com/api-create.php?url=${q}`)
 reply(`Link encurtado com sucesso, aqui está: ${anu.data}`).catch(async(error) => {
 reply(mess.error())
@@ -3593,29 +3839,15 @@ reply(mess.error())
 break
 
 case 'encurtarlink2': case 'cuttly':
-if(args.length < 1) return reply(`❌️ *Forma incorreta, use está como exemplo:* ${prefix + command} https://instagram.com/Yuribot.wpp`)
+if(args.length < 1) return reply(`❌️ *Forma incorreta, use está como exemplo:* ${prefix + command} https://instagram.com/yurizinbot.wpp`)
 anu = await axios.get(API_URL+`/api/shortener/cuttly?link=${q}&apikey=`+API_KEY_YURI)
 reply(`Link encurtado com sucesso, aqui está: ${anu.data.resultado}`).catch(async(error) => {
 reply(mess.error())
 })
 break
 
-case 'horariospg': case 'horarios-pagantes':
-if(!isGroup) return await reply(mess.onlyGroup());
-try {
-  dataPG = await fetchJson(API_URL + `/api/outros/horarios-pagantes?apikey=${API_KEY_YURI}`);
-  //console.log(dataPG.resultado?.schedules);
-  schedulesResult = dataPG.resultado?.schedules?.map((v, index) => {
-    return `${v.name}\n${v.times?.map((vv, iindex) => `\t${vv}`).join('\n')}`;
-  }).join('\n—\n');
-  await yurizin.sendMessage(from, {image: {url: `https://files.catbox.moe/tt3q2q.jpg`}, caption: `> ⏰️ *HORÁRIOS PAGANTES* 💰\n⚠️ Aviso: _${dataPG.resultado?.alert}_\n💡 Sugestão: _${dataPG.resultado?.suggestion}_\n—\n${schedulesResult}`}, {quoted: selo});
-} catch(error) {
-  return await reply(mess.error());
-}
-break
-
 case 'encurtarlink3': case 'bitly':
-if(args.length < 1) return reply(`❌️ *Forma incorreta, use está como exemplo:* ${prefix + command} https://instagram.com/Yuribot.wpp`)
+if(args.length < 1) return reply(`❌️ *Forma incorreta, use está como exemplo:* ${prefix + command} https://instagram.com/yurizinbot.wpp`)
 anu = await axios.get(API_URL+`/api/shortener/bitly?link=${q}&apikey=`+API_KEY_YURI)
 reply(`Link encurtado com sucesso, aqui está: ${anu.data.resultado}`).catch(async(error) => {
 reply(mess.error())
@@ -3625,7 +3857,7 @@ break
 case 'spotify':
 if(!q) return reply("O campo e texto está vazio. Por favor, insira do URL do Spotify.")
 if(!q.startsWith('https://')) return reply(`Este comando não permite pesquisa, entre no aplicativo e pegue um URL de uma música no Spotify e envie ao lado do comando. Desde já, agradeço sua compreensão!`);
-await reply(mess.wait(), {reagir: "✅"})
+await reply(mess.wait(), {reagir: "😸"})
 try {
 data = await fetchJson(API_URL+`/api/download/spotify?url=${q}&apikey=`+API_KEY_YURI);
 await yurizin.sendMessage(from, {audio: {url: data.resultado?.dl_link}, fileName: data.resultado?.name + '.mp3', mimetype: "audio/mpeg", headerType: 4, contextInfo: {externalAdReply: {title: `${data.resultado?.name}`, body: `${data.resultado?.artists} · ${data.resultado?.albumName} · Song · ${data.resultado?.releaseDate.split('-')[0]}`, showAdAttribution: true, thumbnail: await getBuffer(data?.resultado?.thumbnail), mediaType: 2, mediaUrl: data.resultado?.url, sourceUrl: data.resultado?.url}}}, {quoted: info});
@@ -3658,68 +3890,109 @@ return await reply(mess.error(), {reagir: "❌"});
 }
 break
 
+case 'play':case 'p':case 'playaudio':
+if(!q)return reply(mess.ytSyntax(prefix));
+await reagir(from,"🕐");
+try{
+data=await fetchJson(API_URL+`/api/pesquisa/youtube?query=${q}&apikey=`+API_KEY_YURI);
+if(data.resultado[0]?.timestamp?.length>=7)return reply(mess.ytLimitDL(),{reagir:"❌"});
+dataAudio=await fetchJson(API_URL+`/api/download/play_audio/v4?nome_url=${data.resultado[0].url}&apikey=`+API_KEY_YURI);
+if(isButtons){
+await yurizin.sendMessage(from,{
+image:{url:data.resultado[0].image},
+caption:mess.yt(data,formatNumberDecimal),
+buttons:[
+{buttonId:`${prefix}play_audio ${data.resultado[0].url}`,buttonText:{displayText:"💧﹚ 𝐀𝐔𝐃𝐈𝐎 ﹙💧"}},
+{buttonId:`${prefix}play_video ${data.resultado[0].url}`,buttonText:{displayText:"💧﹚ 𝐕𝐈𝐃𝐄𝐎 ﹙💧"}},
+{buttonId:`${prefix}play_documento ${data.resultado[0].url}`,buttonText:{displayText:"💧﹚ 𝐃𝐎𝐂𝐔𝐌𝐄𝐍𝐓𝐎 ﹙💧"}}
+],
+headerType:6,
+viewOnce:true
+},{quoted:selo});
+}else{
+await yurizin.sendMessage(from,{
+image:{url:data.resultado[0].image},
+caption:mess.yt(data,formatNumberDecimal)
+},{quoted:info}).then(async(sendMess)=>{
+await yurizin.sendMessage(from,{
+audio:{url:dataAudio.resultado.dl_link},
+fileName:dataAudio.resultado.title+'.mp3',
+mimetype:"audio/mpeg"
+},{quoted:sendMess});
+await yurizin.reagir(info,"✅");
+});
+}
+}catch(error){
+return reply(mess.error(),{reagir:"❌"});
+}
+break;
+
+
+case 'play_documento': 
+case 'play_audio': 
+case 'play_video':
+await reagir(from, "🕐");
+try {
+if(command === "play_documento") {
+dataAudio = await fetchJson(API_URL+`/api/download/play_audio?nome_url=${q}&apikey=`+API_KEY_YURI);
+await yurizin.sendMessage(from, {document: {url: dataAudio.resultado.dl_link }, fileName: dataAudio.resultado.title + '.mp3', mimetype: "audio/mpeg"}, {quoted: info});
+await yurizin.reagir(info, "✅");
+} else if(command === "play_audio") {
+dataAudio = await fetchJson(API_URL+`/api/download/play_audio?nome_url=${q}&apikey=`+API_KEY_YURI);
+await yurizin.sendMessage(from, {audio: {url: dataAudio.resultado.dl_link }, fileName: dataAudio.resultado.title + '.mp3', mimetype: "audio/mpeg"}, {quoted: info});
+await yurizin.reagir(info, "✅");
+} else if(command === "play_video") {
+dataVideo = await fetchJson(API_URL+`/api/download/play_video/v2?nome_url=${q}&apikey=`+API_KEY_YURI);
+await yurizin.sendMessage(from, {video: {url: dataVideo.resultado.dl_link }, fileName: dataAudio.resultado.title + '.mp4', mimetype: "video/mp4"}, {quoted: info});
+await yurizin.reagir(info, "✅");
+}
+} catch(error) {
+return reply(mess.error(), {reagir: "❌"});
+}
+break
+
+/*
 case 'play': case 'p': case 'playaudio':
 if(!q) return reply(mess.ytSyntax(prefix));
+await reagir(from, "🕐");
 try {
-   if(isUrl(q)) {
-    data = await fetchJson(API_URL+`/api/download/play_audio?nome_url=${q}&apikey=`+API_KEY_YURI);
-     await yurizin.sendMessage(from, {image: {url: data.resultado.thumbnails[0]}, caption: mess.ytPlayURL(data)}, {quoted: selo}).then(async(sendMess) => {
-        await yurizin.sendMessage(from, {audio: {url: data.resultado.dl_link }, fileName: data.resultado.title + '.mp3', mimetype: "audio/mpeg"}, {quoted: sendMess}); await yurizin.reagir(info, "✅")
-     });
-   } else {
-     data = await fetchJson(API_URL+`/api/pesquisa/youtube?query=${q}&apikey=`+API_KEY_YURI);
-     if(data.resultado[0]?.timestamp?.length >= 7) return await reply(mess.ytLimitDL(), {reagir: "❌"});
-     dataAudio = await fetchJson(API_URL+`/api/download/play_audio?nome_url=${data.resultado[0].url}&apikey=`+API_KEY_YURI);
-     await yurizin.sendMessage(from, { image: {url: data.resultado[0].image}, caption: mess.ytPlayQuery(data, formatNumberDecimal) }, {quoted: info}).then(async(sendMess) => {
-        await yurizin.sendMessage(from, {audio: {url: dataAudio.resultado.dl_link }, fileName: dataAudio.resultado.title + '.mp3', mimetype: "audio/mpeg"}, {quoted: sendMess}); await yurizin.reagir(info, "✅");
-     })
-   }
-} catch(error) {
-  await reply(mess.error(), {reagir: "❌"});
-  console.error(error);
-}
-break
-
-case 'pdoc': case 'playdoc':
-if(!q) return reply(mess.ytSyntax(prefix));
-try {
-   if(isUrl(q)) {
-    data = await fetchJson(API_URL+`/api/download/play_audio?nome_url=${q}&apikey=`+API_KEY_YURI);
-     await yurizin.sendMessage(from, {image: {url: data.resultado.thumbnails[0]}, caption: mess.ytPlayURL(data)}, {quoted: selo}).then(async(sendMess) => {
-        await yurizin.sendMessage(from, {document: {url: data.resultado.dl_link }, fileName: data.resultado.title + '.mp3', mimetype: "audio/mpeg"}, {quoted: sendMess}); await yurizin.reagir(info, "✅")
-     });
-   } else {
-     data = await fetchJson(API_URL+`/api/pesquisa/youtube?query=${q}&apikey=`+API_KEY_YURI);
-     if(data.resultado[0]?.timestamp?.length >= 7) return await reply(mess.ytLimitDL(), {reagir: "❌"});
-     dataAudio = await fetchJson(API_URL+`/api/download/play_audio?nome_url=${data.resultado[0].url}&apikey=`+API_KEY_YURI);
-     await yurizin.sendMessage(from, { image: {url: data.resultado[0].image}, caption: mess.ytPlayQuery(data, formatNumberDecimal) }, {quoted: info}).then(async(sendMess) => {
-        await yurizin.sendMessage(from, {document: {url: dataAudio.resultado.dl_link }, fileName: dataAudio.resultado.title + '.mp3', mimetype: "audio/mpeg"}, {quoted: sendMess}); await yurizin.reagir(info, "✅");
-     })
-   }
+data = await fetchJson(API_URL+`/api/pesquisa/youtube?query=${q}&apikey=`+API_KEY_YURI);
+if(data.resultado[0]?.timestamp?.length >= 7) return reply(mess.ytLimitDL(), {reagir: "❌"});
+dataAudio = await fetchJson(API_URL+`/api/download/play_audio?nome_url=${data.resultado[0].url}&apikey=`+API_KEY_YURI);
+await yurizin.sendMessage(from, { image: {url: data.resultado[0].image}, caption: mess.yt(data, formatNumberDecimal) }, {quoted:info}).then(async(sendMess) => {
+    await yurizin.sendMessage(from, {audio: {url: dataAudio.resultado.dl_link }, fileName: dataAudio.resultado.title + '.mp3', mimetype: "audio/mpeg"}, {quoted: sendMess});
+     await yurizin.reagir(info, "✅");
+})
 } catch(error) {
   return reply(mess.error(), {reagir: "❌"});
 }
 break
+*/
 
-case 'playvid': case 'pvid': case 'playvideo':
-if(!q) return reply(mess.ytSyntax(prefix));
+case 'playdoc': case 'pdoc':
+if(!q) return reply(mess.syntaxDownloadMusic());
 try {
-   if(isUrl(q)) {
-    data = await fetchJson(API_URL+`/api/download/play_video?nome_url=${q}&apikey=`+API_KEY_YURI);
-     await yurizin.sendMessage(from, {image: {url: data.resultado.thumbnails[0]}, caption: mess.ytPlayURL(data)}, {quoted: selo}).then(async(sendMess) => {
-        await yurizin.sendMessage(from, {video: {url: data.resultado.dl_link }, fileName: data.resultado.title + '.mp4', mimetype: "video/mp4"}, {quoted: info}); 
-        await yurizin.reagir(info, "✅");
-     });
-   } else {
-     data = await fetchJson(API_URL+`/api/pesquisa/youtube?query=${q}&apikey=`+API_KEY_YURI);
-     if(data.resultado[0]?.timestamp?.length >= 7) return await reply(mess.ytLimitDL(), {reagir: "❌"});
-     dataVideo = await fetchJson(API_URL+`/api/download/play_video?nome_url=${data.resultado[0].url}&apikey=`+API_KEY_YURI);
-     await yurizin.sendMessage(from, { image: {url: data.resultado[0].image}, caption: mess.ytPlayQuery(data, formatNumberDecimal) }, {quoted: info}).then(async(sendMess) => {
-        await yurizin.sendMessage(from, {video: {url: dataVideo.resultado.dl_link }, fileName: dataVideo.resultado.title + '.mp4', mimetype: "video/mp4"}, {quoted: sendMess}); await yurizin.reagir(info, "✅");
-     })
-   }
+data = await fetchJson(API_URL+`/api/pesquisa/youtube?query=${q}&apikey=`+API_KEY_YURI);
+if(data.resultado[0]?.timestamp?.length >= 7) return reply("Desculpe, este vídeo ou áudio é muito grande, não poderei realizar este pedido, peça outra música que contenha uma duração abaixo de uma hora.", {reagir: "❌"});
+dataAudio = await fetchJson(API_URL+`/api/download/play_audio?nome_url=${data.resultado[0].url}&apikey=`+API_KEY_YURI);
+await yurizin.sendMessage(from, { image: {url: data.resultado[0].image}, caption: mess.yt(data, formatNumberDecimal) }, {quoted:info}).then(async(sendMess) => {
+    await yurizin.sendMessage(from, {document: {url: dataAudio.resultado.dl_link }, fileName: dataAudio.resultado.title + '.mp3', mimetype: "audio/mpeg"}, {quoted: sendMess});
+    await yurizin.reagir(info, "✅");
+})
 } catch(error) {
-  return reply(mess.error(), {reagir: "❌"});
+    return await reply(mess.error() + `\n• Use como uma segunda opção, o ${prefix}playdoc2 para baixar o áudio.`, {reagir: "❌"});
+}
+break
+
+case 'playvid': case 'pvid': case 'playvideo': case 'pmp4':
+if(!q) return reply(mess.syntaxDownloadMusic());
+try {
+data = await fetchJson(API_URL+`/api/pesquisa/youtube?query=${q}&apikey=`+API_KEY_YURI);
+dataVideo = await fetchJson(API_URL+`/api/download/play_video?nome_url=${data.resultado[0].url}&apikey=`+API_KEY_YURI);
+await yurizin.sendMessage(from, {video: {url: dataVideo.resultado.dl_link }, caption: mess.yt(data, formatNumberDecimal), mimetype: "video/mp4"}, {quoted: info});
+await yurizin.reagir(info, "✅");
+} catch(error) {
+    return await reply(mess.error() + `\n• Use como uma segunda opção, o ${prefix}playvid2 para baixar o áudio.`, {reagir: "❌"});
 }
 break
 
@@ -3790,13 +4063,13 @@ await yurizin.sendMessage(from, {document: fs.readFileSync(v.zip), caption: `•
 break 
 
 case 'shazam': 
-// 2024 © Copyright by Yuri-Bot
+// 2024 © Copyright by yurizin-BOT
 if(!isQuotedAudio) return await reply('Você esqueceu de mencionar um áudio com um trecho de uma música para fazer o upload ao servidor e retornar o possível nome da música.', {reagir: "❌"});
 dataMedia = await getFileBuffer(info.message.extendedTextMessage.contextInfo.quotedMessage.audioMessage, 'audio');
 try {
   const sh = new Shazam();
   _shazamResult = await sh.start(dataMedia);
-  await reply(mess.shazam(_shazamResult), {reagir: "✅"});
+  await reply(mess.shazam(_shazamResult), {reagir: "😺"});
 } catch(error) {
   return await reply(error?.message, {reagir: "❌"});
 };
@@ -3804,7 +4077,7 @@ break
 
 case 'audiomeme': case 'playmeme':
 if(!q) return reply(`NaN, você não digitou nada... Exemplo: *${prefix+command} Lula*`);
-await reagir(from, "✅")
+await reagir(from, "😸")
 try {
 dataInstants = await fetchJson(API_URL+`/api/pesquisa/myinstants?query=${q}&apikey=`+API_KEY_YURI)
 randomAudio = await pickRandom(dataInstants.resultado);
@@ -3814,9 +4087,38 @@ reply(mess.error());
 }
 break
 
+case 'audiomemee':
+case 'playmeme':
+  if (!q) return reply(`NaN, você não digitou nada... Exemplo: *${prefix + command} Lula*`);
+  await reagir(from, "😸");
+  try {
+    const dataInstants = await fetchJson(`${API_URL}/api/pesquisa/myinstants?query=${q}&apikey=${API_KEY_YURI}`);
+    const randomAudio = await pickRandom(dataInstants.resultado);
+
+    await yurizin.sendMessage(from, {
+      audio: { url: randomAudio },
+      mimetype: "audio/mpeg",
+      ptt: true
+    }, { quoted: selo });
+
+    await yurizin.sendMessage(from, {
+      text: `🔊 Resultado para: *${q}*`,
+      buttons: [
+        { buttonId: `${prefix}audiomemee ${q}`, buttonText: { displayText: "🔁 Tocar Outro" } }
+      ],
+      footer: "Escolha uma opção abaixo 👇",
+      headerType: 1
+    }, { quoted: selo });
+
+  } catch (error) {
+    console.error(error);
+    reply(mess.error());
+  }
+  break;
+
 case 'audiomeme2': case 'playmeme2':
 if(!q) return reply(`NaN, você não digitou nada... Exemplo: *${prefix+command} Lula*`);
-await reagir(from, "✅")
+await reagir(from, "😸")
 try {
 dataTuna = await fetchJson(API_URL+`/api/pesquisa/tuna?query=${q}&apikey=`+API_KEY_YURI)
 randomAudio = pickRandom(dataTuna.resultado)
@@ -3827,7 +4129,7 @@ await reply(mess.error());
 break
 
 case 'enhance': case 'dehaze': case 'recolor':
-// © Yuri-Bot
+// © yurizin-BOT
 if((isMedia && !info.message.videoMessage || isQuotedImage)) {
 MediaMenc = isQuotedImage ? JSON.parse(JSON.stringify(info).replace('quotedM','m')).message.extendedTextMessage.contextInfo.message.imageMessage : info.message.imageMessage;
 downloadContent = await downloadContentFromMessage(MediaMenc, 'image');
@@ -3841,6 +4143,8 @@ await reply(mess.error(), {reagir: '❌️'});
 }
 } else return await reply(`*‐* Responda uma imagem ou adicione na legenda da imagem o comando, para atribuir o efeito '${command}' à foto`, {reagir: '😾️'});
 break
+
+/*
 
 case 'mistral':
 if(!q) return await reply("Você esqueceu de perguntar ao lado do comando.", {reagir: '❌️'});
@@ -3875,6 +4179,7 @@ await yurizin.sendMessage(from, {text: 'Sem resposta!', edit: key});
 }
 break
 
+
 case 'ghibli': 
 if(!isQuotedImage) return await reply(`Marque uma imagem ou adiciona na legenda da mesma o comando por favor.`, {reagir: "😑"});
 try {
@@ -3888,7 +4193,7 @@ try {
    {
     headers: {
       'authority': 'https://ghibliai-worker.ghibli-ai-prod-worker-v2-8x9f3.workers.dev',
-      'accept': '*/*',
+      'accept': '',
       'content-type': 'application/json',
       'origin': 'https://ghibliai.com',
       'priority': 'u=1, i',
@@ -3913,7 +4218,7 @@ case 'gemini':
 if(!q) return await reply("Você esqueceu de perguntar ao lado do comando.", {reagir: '❌️'});
 var { key } = await yurizin.sendMessage(from, {text: `Estou processando a resposta de sua pergunta, *isso pode levar alguns segundos*! Aguarde...️`}, {quoted: info});
 try {
-data = await fetchJson(API_URL+`/api/ia/geminichat?prompt=${q}&apikey=`+API_KEY_YURI);
+data = await fetchJson(API_URL+`/api/ia/gemini?prompt=${q}&apikey=`+API_KEY_YURI);
 await yurizin.sendMessage(from, {text: data.resultado.resposta, edit: key});
 } catch(e) {
 await yurizin.sendMessage(from, {text: 'Sem resposta!', edit: key});
@@ -3931,46 +4236,89 @@ await yurizin.sendMessage(from, {text: 'Sem resposta!', edit: key});
 }
 break
 
-case 'freebox':
-if(!q) return await reply("Você esqueceu de perguntar ao lado do comando.", {reagir: '❌️'});
+case 'imagine':
+if(!q) return reply("Você esqueceu de preencher ao lado do comando o que você deseja criar usando a inteligência artificial.", {reagir: '❌️'});
+var { key } = await yurizin.sendMessage(from, {text: mess.waitCreateIA()}, {quoted: info});
 try {
-await reply(mess.wait(), {reagir: "🌟"});
-data = await fetchJson(API_URL + `/api/ia/ai-freebox?type=ai-photo-generator&prompt=${q}&apikey=` + API_KEY_YURI);
-await yurizin.sendMessage(from, {image: {url: data.resultado?.imageUrl}}, {quoted: selo});
+await yurizin.sendMessage(from, {image: {url: `${API_URL}/api/ia/imagine?prompt=${q?.trim()}&apikey=${API_KEY_YURI}`}}, {quoted: selo});
 } catch(error) {
-await reply(mess.error(), {reagir: "🤦‍♂️"});
+await yurizin.sendMessage(from, {text: mess.errorCreateIA(), edit: key});
 }
 break
 
-case 'fluxfast':
-if(!q) return await reply("Você esqueceu de perguntar ao lado do comando.", {reagir: '❌️'});
+case 'midjourney':
+if(!q) return reply("Você esqueceu de preencher ao lado do comando o que você deseja criar usando a inteligência artificial.", {reagir: '❌️'});
+var { key } = await yurizin.sendMessage(from, {text: mess.waitCreateIA()}, {quoted: info});
 try {
-await reply(mess.wait(), {reagir: "🌟"});
-data = await fetchJson(API_URL + `/api/ia/ai-flux-fast?prompt=${q}&apikey=` + API_KEY_YURI);
-await yurizin.sendMessage(from, {image: {url: data.resultado?.imageUrl}}, {quoted: selo});
+data = await fetchJson(API_URL + `/api/ia/midjourney?apikey=${API_KEY_YURI}&prompt=${q}`);
+for (let number = 0; number < data.resultado.length; number++) {
+await yurizin.sendMessage(from, {image: {url: data.resultado[number]}}, {quoted: info});
+}
 } catch(error) {
-await reply(mess.error(), {reagir: "🤦‍♂️"});
+await yurizin.sendMessage(from, {text: mess.errorCreateIA(), edit: key});
 }
 break
 
-case 'writecream':
-if(!q) return await reply("Você esqueceu de perguntar ao lado do comando.", {reagir: '❌️'});
+case 'geminicreate': case 'googlecreate':
+if(!q) return reply("Você esqueceu de preencher ao lado do comando o que você deseja criar usando a inteligência artificial.", {reagir: '❌️'});
+var { key } = await yurizin.sendMessage(from, {text: mess.waitCreateIA()}, {quoted: info});
 try {
-await reply(mess.wait(), {reagir: "🌟"});
-data = await fetchJson(API_URL + `/api/ia/ai-write-cream?prompt=${q}&apikey=` + API_KEY_YURI);
-await yurizin.sendMessage(from, {image: {url: data.resultado?.image_link }}, {quoted: selo});
+await yurizin.sendMessage(from, {image: {url: API_URL + `/api/ia/gemini-create?apikey=${API_KEY_YURI}&prompt=${q}`}}, {quoted: info});
+await yurizin.sendMessage(from, {text: "Concluído com sucesso! ✅️", edit: key});
 } catch(error) {
-await reply(mess.error(), {reagir: "🤦‍♂️"});
+await yurizin.sendMessage(from, {text: mess.errorCreateIA(), edit: key});
 }
 break
+
+case 'text2img':
+if(!q) return reply("Você esqueceu de preencher ao lado do comando o que você deseja criar usando a inteligência artificial.", {reagir: '❌️'});
+var { key } = await yurizin.sendMessage(from, {text: mess.waitCreateIA()}, {quoted: info});
+try {
+data = await fetchJson(API_URL + `/api/ia/text2img?apikey=${API_KEY_YURI}&prompt=${q}`);
+for (let number = 0; number < data.resultado.length; number++) {
+await yurizin.sendMessage(from, {image: {url: data.resultado[number]}}, {quoted: info});
+}
+} catch(error) {
+await yurizin.sendMessage(from, {text: mess.errorCreateIA(), edit: key});
+}
+break
+
+case 'gptpicture':
+if(!q) return reply("Você esqueceu de preencher ao lado do comando o que você deseja criar usando a inteligência artificial.", {reagir: '❌️'});
+var { key } = await yurizin.sendMessage(from, {text: mess.waitCreateIA()}, {quoted: info});
+try {
+data = await fetchJson(API_URL + `/api/ia/gpt-picture?apikey=${API_KEY_YURI}&prompt=${q}`);
+for (let number = 0; number < data.resultado.length; number++) {
+await yurizin.sendMessage(from, {image: {url: data.resultado[number]}}, {quoted: info});
+}
+} catch(error) {
+await yurizin.sendMessage(from, {text: mess.errorCreateIA(), edit: key});
+}
+break
+
+case 'sdxlcreate':
+if(!q) return reply("Você esqueceu de preencher ao lado do comando o que você deseja criar usando a inteligência artificial.", {reagir: '❌️'});
+var { key } = await yurizin.sendMessage(from, {text: mess.waitCreateIA()}, {quoted: info});
+try {
+data = await fetchJson(API_URL + `/api/ia/sdxlcreate?apikey=${API_KEY_YURI}&prompt=${q}`);
+for (let number = 0; number < data.resultado.length; number++) {
+await yurizin.sendMessage(from, {image: {url: data.resultado[number]}}, {quoted: info});
+}
+} catch(error) {
+await yurizin.sendMessage(from, {text: mess.errorCreateIA(), edit: key});
+}
+break
+
+*/
 
 case 'movie':
-if (args.length == 0) return reply(`Cadê o nome do filme o qual você deseja ver informações?`);
+if (args.length == 0) return reply(`Cadê o nome do filme o qual você deseja ver informações?`)
 movieInfo = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY_TMDB}&query=${encodeURIComponent(q)}&language=pt`);
-if (movieInfo.data.total_results == 0) return reply(mess.noresult());
+if (movieInfo.data.total_results == 0) return reply(mess.noresult())
 var ImageMovieLink = `https://image.tmdb.org/t/p/original${movieInfo.data.results[0].backdrop_path}`;
-var fotoFilme = await getBuffer(ImageMovieLink);
-await yurizin.sendMessage(from, {image: fotoFilme, caption: mess.movies(movieInfo)}, {quoted: selo}).catch(async(error) => {
+var fotoFilme = await getBuffer(ImageMovieLink)
+yurizin.sendMessage(from, {image: fotoFilme, caption: mess.movies(movieInfo)}, {quoted: selo})
+.catch(async(error) => {
 return reply(mess.error());
 })
 break
@@ -3979,7 +4327,7 @@ case 'myname':
 if(!q) return reply('Qual é o nome que você deseja saber o significado? Adicione após o comando...');
 try {
 data = await fetchJson(API_URL+`/api/pesquisa/myname?query=${q}&apikey=`+ API_KEY_YURI);
-await reagir(from, '✅');
+await reagir(from, '😸');
 await yurizin.sendMessage(from, {image: {url: data.resultado.imageUrl}, caption: `• Origem do Nome: *${data.resultado.origem}*\n• Derivações: *${data.resultado.derivacoes ? data.resultado.derivacoes : "Não possuí nenhum tipo de derivação."}*\n• Gênero: *${capitalizeFirstLetter(data.resultado.genero.split('nome ')[1] || "Gênero não identificado.")}*\n• Lugares ou referências com relação ao nome: *${data.resultado.locaisComNome || 'Sem resultado.'}*\n• Relacionados: *${data.resultado.nomesRelacionados || 'Sem resultado.'}*`}, {quoted: selo});
 } catch(error) {
 return await reply(mess.error(), {reagir: '❌'});
@@ -3989,8 +4337,8 @@ break
 case 'retro':
 try {
 var [TXT1, TXT2, TXT3] = q.split("|");
-if(!q.includes("|")) return await reply(`Você esqueceu de adicionar os 3 textos para criar a logo! Para dividir os textos, use *|*, por exemplo:\n> Ex: *${prefix+command} Yuri|BOT|Oficial*`, {reagir: "❌"});
-await reply(mess.wait(), {reagir: "✅"});
+if(!q.includes("|")) return await reply(`Você esqueceu de adicionar os 3 textos para criar a logo! Para dividir os textos, use *|*, por exemplo:\n> Ex: *${prefix+command} yurizin|BOT|Oficial*`, {reagir: "❌"});
+await reply(mess.wait(), {reagir: "😸"});
 await yurizin.sendMessage(from, { image: {url: API_URL + `/api/ephoto/retro?apikey=${API_KEY_YURI}&text=${TXT1?.trim()}&text2=${TXT2?.trim()}&text3=${TXT3?.trim()}` }}, {quoted: info});
 await yurizin.reagir(info, "✅");
 } catch (e) {
@@ -4001,8 +4349,8 @@ break
 case 'captain': case 'graffitiwall': case 'phlogo': case 'blackpink': case 'deadpool': case 'glitter': case 'vintage3d':
 try {
 var [TXT1, TXT2] = q.split("|");
-if(!q.includes("|")) return await reply(`Você esqueceu de adicionar os 2 textos para criar a logo! Para dividir os textos, use *|*, por exemplo:\n> Ex: *${prefix+command} Yuri|BOT*`, {reagir: "❌"});
-await reply(mess.wait(), {reagir: "✅"});
+if(!q.includes("|")) return await reply(`Você esqueceu de adicionar os 2 textos para criar a logo! Para dividir os textos, use *|*, por exemplo:\n> Ex: *${prefix+command} yurizin|BOT*`, {reagir: "❌"});
+await reply(mess.wait(), {reagir: "😸"});
 await yurizin.sendMessage(from, { image: {url: API_URL + `/api/ephoto/${command}?apikey=${API_KEY_YURI}&text=${TXT1?.trim()}&text2=${TXT2?.trim()}` }}, {quoted: info});
 await yurizin.reagir(info, "✅");
 } catch (e) {
@@ -4012,8 +4360,8 @@ break
 
 case 'galaxy-light': case 'galaxy': case 'glitch': case 'graffiti': case 'metallic': case 'glossy': case 'mascote': case 'dragonfire': case 'goldpink': case 'pubgavatar': case 'ffavatar': case 'amongus': case 'comics': case 'lolavatar': case 'cemiterio': case 'blood': case 'hallobat': case 'titanium': case 'eraser': case 'halloween': case 'snow': case 'america': case 'mascoteneon': case 'doubleexposure': case 'metal': case '3dcrack': case 'colorful': case 'ballon': case 'multicolor': case 'graffitipaint': case 'graffitistyle': case 'frozen': case 'ligatures': case 'watercolor': case 'summerbeach': case 'cloudsky': case 'techstyle': case 'royal': case 'firework': case 'mascotemetal':
 try {
-if(!q) return await reply(`Você esqueceu de adicionar um texto para criar a logo! Por exemplo:\n> Ex: *${prefix+command} Yuri*`, {reagir: "❌"});
-await reply(mess.wait(), {reagir: "✅"});
+if(!q) return await reply(`Você esqueceu de adicionar um texto para criar a logo! Por exemplo:\n> Ex: *${prefix+command} yurizin*`, {reagir: "❌"});
+await reply(mess.wait(), {reagir: "😸"});
 await yurizin.sendMessage(from, { image: {url: API_URL + `/api/ephoto/${command}?apikey=${API_KEY_YURI}&text=${q?.trim()}` }}, {quoted: info});
 await yurizin.reagir(info, "✅");
 } catch (e) {
@@ -4038,9 +4386,9 @@ case 'skate-name':
 case 'retro-logo':
 case 'candy-logo':
 case 'glossy-logo':
-if(!q) return await reply(`Você esqueceu de adicionar um texto para criar a logo! Por exemplo:\n> Ex.: *${prefix+command} Yuri*`, {reagir: "❌"});
+if(!q) return await reply(`Você esqueceu de adicionar um texto para criar a logo! Por exemplo:\n> Ex.: *${prefix+command} yurizin*`, {reagir: "❌"});
 try {
-await reply(mess.wait(), {reagir: "✅"});
+await reply(mess.wait(), {reagir: "😸"});
 await yurizin.sendMessage(from, {image: {url: API_URL + `/api/flamingtext?command=${command}&text=${q}&apikey=` + API_KEY_YURI}}, {quoted: selo})
 } catch(error) {
 return await reply(mess.error(), {reagir: '❌'});
@@ -4059,7 +4407,7 @@ if(!q.includes("/")) return reply(`Ex.: *${prefix+command} peso/altura*`)
 var [peso, altura] = q.split("/");
 var resultado = await obeso(peso, altura)
 if (resultado <= 17 || resultado <= 18.4) { 
-    return await reply(`• Seu índice de massa corporal é de: *${resultado}* -> Você está abaixo do peso.`, {reagir: '✅'});
+    return await reply(`• Seu índice de massa corporal é de: *${resultado}* -> Você está abaixo do peso.`, {reagir: '😸'});
 } else if (resultado <= 18.5 || resultado <= 24.9) {
    return await reply(`• Seu índice de massa corporal é: *${resultado}* -> Você está no peso ideal.`, {reagir: '👍'});
 } else if (resultado <= 25 || resultado <= 29.9) {
@@ -4111,7 +4459,7 @@ case 'scpesquisa': case 'scsearch': case 'pes-sc':
 if(!q) return await reply(`Por favor, coloque após o comando o que você deseja buscar no SoundCloud.`, {reagir: "❌"});
 try {
 data = await fetchJson(API_URL + `/api/pesquisa/soundcloud?query=${q}&apikey=` + API_KEY_YURI);
-await reply('> 𝐒𝐨𝐮𝐧𝐝𝐂𝐥𝐨𝐮𝐝 𝐏𝐞𝐬𝐪𝐮𝐢𝐬𝐚\n–\n' + data.resultado.map((v, index) => `*${index + 1}.* Título: *${v.title}*\n• Duração: *${v.time} segundos.*\n• Artista: *${v.artist_name}*\n• Perfil: *${v.artist_url}*\n• URL: *${v.url}*`).join("\n—\n"), {reagir: "✅"});
+await reply('> 𝐒𝐨𝐮𝐧𝐝𝐂𝐥𝐨𝐮𝐝 𝐏𝐞𝐬𝐪𝐮𝐢𝐬𝐚\n–\n' + data.resultado.map((v, index) => `*${index + 1}.* Título: *${v.title}*\n• Duração: *${v.time} segundos.*\n• Artista: *${v.artist_name}*\n• Perfil: *${v.artist_url}*\n• URL: *${v.url}*`).join("\n—\n"), {reagir: "😸"});
 } catch(error) {
 return await reply(mess.error(), {reagir: "❌"})
 }
@@ -4121,7 +4469,7 @@ case 'applesearch':
 if(!q) return await reply(`Por favor, coloque após o comando uma música que você deseja pesquisar no Apple Music, por exemplo: _${prefix+command} Observando essa salada_`);
 try {
 data = await fetchJson(API_URL + `/api/pesquisa/apple-music?query=${q}&apikey=` + API_KEY_YURI);
-await reply('> 𝐀𝐩𝐩𝐥𝐞 𝐌𝐮𝐬𝐢𝐜 𝐏𝐞𝐬𝐪𝐮𝐢𝐬𝐚\n–\n' + data.resultado.map((v, index) => `*${index + 1}.* Título: *${v.title}*\n• Artista: *${v.artistInfo?.name}*\n• Perfil: *${v.artistInfo?.url}*\n• URL: *${v.songUrl}*`).join("\n—\n"), {reagir: "✅"}); 
+await reply('> 𝐀𝐩𝐩𝐥𝐞 𝐌𝐮𝐬𝐢𝐜 𝐏𝐞𝐬𝐪𝐮𝐢𝐬𝐚\n–\n' + data.resultado.map((v, index) => `*${index + 1}.* Título: *${v.title}*\n• Artista: *${v.artistInfo?.name}*\n• Perfil: *${v.artistInfo?.url}*\n• URL: *${v.songUrl}*`).join("\n—\n"), {reagir: "😸"}); 
 } catch(error) {
 return await reply(mess.error(), {reagir: "❌"})
 }
@@ -4300,6 +4648,70 @@ console.log(error)
 }
 break
 
+case 'igsh': case 'igstalker': case 'instastalk': case 'instastalker': {
+  try { 
+    await reagir(from, '🔍');
+
+    const axios = require('axios');
+    const username = q.trim().replace(/^@/, '').toLowerCase();
+    if (!username) return reply(`🌷 Use: *${prefix}igstalk* <usuário>\n\nEx: *${prefix}igstalk* @kamui_7771`);
+
+    const params = new URLSearchParams();
+    params.append('profile', username);
+
+    const { data } = await axios.post('https://tools.xrespond.com/api/instagram/profile-info', params.toString(), {
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded',
+        'origin': 'https://bitchipdigital.com',
+        'referer': 'https://bitchipdigital.com/',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+      }
+    });
+
+    const raw = data?.data?.data;
+    if (!raw || data.status !== 'success') throw new Error('❌ Não foi possível obter o perfil.');
+
+    const nome = raw.full_name || '-';
+    const user = raw.username || '-';
+    const bio = raw.biography || 'Não informada';
+    const seguidores = raw.follower_count?.toLocaleString() || '0';
+    const seguindo = raw.following_count?.toLocaleString() || '0';
+    const verificado = raw.is_verified || raw.show_blue_badge_on_main_profile;
+    const privado = raw.is_private;
+    const posts = raw.media_count ?? '0';
+    const foto = raw.hd_profile_pic_url_info?.url || raw.profile_pic_url_hd || raw.profile_pic_url;
+
+    const legenda = `
+╭──❍ *INSTAGRAM STALKER* ❍───╮
+│ 👤 *Nome:* ${nome}
+│ 🔰 *Usuário:* @${user}
+│ 📌 *Biografia:* ${bio}
+│ 🖼️ *Posts:* ${posts}
+│ 👥 *Seguidores:* ${seguidores}
+│ 👣 *Seguindo:* ${seguindo}
+│ 🔒 *Privado:* ${privado ? 'Sim 🔐' : 'Não 🔓'}
+│ ✅ *Verificado:* ${verificado ? 'Sim' : 'Não'}
+╰────────────────────────────╯
+    `.trim();
+
+    if (!foto) return reply('⚠️ Não foi possível carregar a foto de perfil.');
+
+    await yurizin.sendMessage(from, {
+      image: { url: foto },
+      caption: legenda
+    }, { quoted: info });
+
+    await reagir(from, '✅');
+  } catch (e) {
+    console.error('Erro no comando IGStalk:', e);
+    await reply('❌ Ocorreu um erro ao buscar o perfil.');
+    await reagir(from, '❌');
+  }
+  break; 
+}
+
+
+/*
 case 'igsh': case 'igstalker': case 'instastalk': case 'instastalker':
 if(!q.includes("@")) return reply(`Coloque após este comando com o @ da pessoa que você deseja stalkear *_(perseguir)_*. Contendo o @ na frente, por favor!\n📌 *Exemplo:* _${prefix+command} @anitta_\n–\n→ Dados a serem retornados: *Registro das 7 últimas publicações postadas com o link do site do Dumpor, uma plataforma de Stalker, estatísticas do Perfil e biografia.*\n→ _Caso não coloque o @ da pessoa correto não irá funcionar, se a conta existir vai retornar informações de outro perfil e não o desejado, se não existir irá retornar uma mensagem de erro ao processar tal solicitação._`, {reagir: "🤫"});
 try {
@@ -4309,6 +4721,7 @@ await yurizin.sendMessage(from, {text: mess.InstaStalker(data), contextInfo: {ex
 return await reply(mess.error(), {reagir: "❌"});
 }
 break
+*/
 
 case 'ffstalker':
 if(!q) return await reply('Coloque após o comando o id da conta do Free Fire para retornar informações sobre.');
@@ -4644,6 +5057,26 @@ reply('1 para ativar, 0 para desativar')
 }
 break
 
+case 'antidelete':
+if(!isGroup) return reply(mess.onlyGroup())
+if(!isGroupAdmins) return reply(mess.onlyAdmins())
+if(!isBotGroupAdmins) return reply(mess.onlyBotAdmin())
+if(args.length < 1) return reply(`Use 1 pra ativar ou 0 pra desativar. Caso deseja ativar, use essa forma: ${prefix+command} 1, caso seja desativar e só trocar o 1 pelo 0.`)
+if(Number(args[0]) === 1) {
+if(isAntiDel) return reply('O recurso de antidelete já está ativado.')
+dataGp[0].antidelete = true
+updateGroup(dataGp)
+reply('Ativou com sucesso o recurso de antidelete neste grupo.')
+} else if(Number(args[0]) === 0) {
+if(!isAntiDel) return reply('O recurso de antidelete já está desativado.')
+dataGp[0].antidelete = false
+updateGroup(dataGp)
+reply('Desativou com sucesso o recurso de antidelete neste grupo.')
+} else {
+reply('1 para ativar, 0 para desativar')
+}
+break
+
 case 'visualizarmsg':
 if(!SoDono) return reply(mess.onlyOwner())
 if(!isVisualizar) {
@@ -4654,6 +5087,26 @@ reply('Ativou com sucesso o recurso de visualizar todas as mensagens enviada em 
 definitions.ViewMessagesChat = false
 fs.writeFileSync('./settings/definitions.json', JSON.stringify(definitions, null, 2))
 reply('Desativou com sucesso o recurso de visualizar todas as mensagens enviada em grupos e privado.')
+}
+break
+
+case 'x9visuunica':
+if(!isGroup) return reply(mess.onlyGroup())
+if(!isGroupAdmins) return reply(mess.onlyAdmins())
+if(!isBotGroupAdmins) return reply(mess.onlyBotAdmin())
+if(args.length < 1) return reply(`Use 1 pra ativar ou 0 pra desativar. Caso deseja ativar, use essa forma: ${prefix+command} 1, caso seja desativar e só trocar o 1 pelo 0.`)
+if(Number(args[0]) === 1) {
+if(isX9VisuUnica) return reply('O recurso de revelar visu única já está ativado.')
+dataGp[0].visuUnica.status = true
+updateGroup(dataGp)
+reply('Ativou com sucesso o recurso de revelar visu única neste grupo.')
+} else if(Number(args[0]) === 0) {
+if(!isX9VisuUnica) return reply('O recurso de revelar visu única já está desativado.')
+dataGp[0].visuUnica.status = false
+updateGroup(dataGp)
+reply('Desativou com sucesso o recurso de revelar visu única neste grupo.')
+} else {
+reply('1 para ativar, 0 para desativar')
 }
 break
 
@@ -5047,6 +5500,55 @@ teks += '*Esses ai vou descer meu martelo do ban.*'
 reply(teks)
 break
 
+case 'banfake':{
+if(!isGroup)return reply(mess.onlyGroup());
+if(!isGroupAdmins)return reply(mess.onlyAdmins());
+let array_fake=[];
+for(let a of groupMembers){
+if(!a.id.startsWith("55")&&a.admin===null){
+array_fake.push(a.id);
+}
+}
+if(array_fake.length===0)return reply("Nenhum número fake encontrado no grupo");
+for(let a of array_fake){
+await sleep(100);
+yurizin.groupParticipantsUpdate(from,[a],'remove');
+}
+let teks=`${array_fake.length} números fake removido do grupo`;
+yurizin.sendMessage(from,{text:teks,mentions:array_fake});
+}
+break;
+
+case 'listafake':
+if(!isGroup) return reply(mess.only.group)
+if(!isGroupAdmins) return reply(mess.only.admin)
+teks = '𝗙𝗔𝗞𝗘𝗦 𝗡𝗢 𝗚𝗥𝗨𝗣𝗢  \n'
+men = []
+for(let mem of groupMembers) {
+    if(!mem.id.startsWith(55)) {
+teks += `➤ @${mem.id.split('@')[0]}\n`
+men.push(mem.id)
+    }
+}
+if(teks.indexOf('➤') < 0) return reply(' 𝗡𝗲𝗻𝗵𝘂𝗺 𝗙𝗮𝗹𝘀𝗼 𝗗𝗲𝘁𝗲𝗰𝘁𝗔𝗱𝗼')
+yurizin.sendMessage(from, {text: teks, mentions: men})
+break
+
+case 'listabr':
+if(!isGroup) return reply(mess.only.group)
+if(!isGroupAdmins) return reply(mess.only.admin)
+teks = '𝗕𝗥𝗔S𝗜𝗟𝗘𝗜𝗥𝗢𝗦 𝗡𝗢 𝗚𝗥𝗨𝗣𝗢 \n'
+men = []
+for(let mem of groupMembers) {
+    if(mem.id.startsWith(55)) {
+teks += `➤ @${mem.id.split('@')[0]}\n`
+men.push(mem.id)
+    }
+}
+if(teks.indexOf('➤') < 0) return reply('🇧🇷 *NENHUM NÚMERO BR FOI ENCONTRADO* 🇧🇷')
+yurizin.sendMessage(from, {text: teks, mentions: men})
+break
+
 case 'mute': case 'mutar':
 if(!isGroup) return reply(mess.onlyGroup());
 if(!isGroupAdmins) return reply(mess.onlyAdmins());
@@ -5259,6 +5761,27 @@ reply('1 para ativar, 0 para desativar')
 }
 break
 
+case 'autodown':
+case 'autodown':
+if(!isGroup) return reply(mess.onlyGroup())
+if(!isGroupAdmins) return reply(mess.onlyAdmins())
+if(!isBotGroupAdmins) return reply(mess.onlyBotAdmin())
+if(args.length < 1) return reply(`Use 1 pra ativar ou 0 pra desativar. Caso deseja ativar, use essa forma: ${prefix+command} 1, caso seja desativar e só trocar o 1 pelo 0.`)
+if(Number(args[0]) === 1) {
+if(isAutodown) return reply('O modo auto download já se encontra ativo no grupo.')
+dataGp[0].autodown = true
+updateGroup(dataGp)
+reply('Ativou com sucesso o recurso de auto download neste grupo.')
+} else if(Number(args[0]) === 0) {
+if(!isAutodown) return reply('O modo auto download já esta desativado no grupo.');
+dataGp[0].autodown = false
+updateGroup(dataGp)
+reply('Desativou com sucesso o recurso de auto download neste grupo.️')
+} else {
+reply('1 para ativar, 0 para desativar')
+}
+break
+
 case 'modobrincadeira':
 case 'modobrincadeiras':  
 if(!isGroup) return reply(mess.onlyGroup())
@@ -5426,6 +5949,7 @@ if(!isGroupAdmins && !SoDono && !isnit && !issupre && !ischyt && !info.key.fromM
 reply(mess.statusBot(isAnticall, isAntiPv, isAntiPv2, isAntiPv3, isAntiImg, isAntiVid, isAntiAudio, isAntiSticker, isAntiDDD, Antidoc, isAntiCtt, Antiloc, isAntilinkgp, isAntiLinkHard, isAntifake, isAntiNotas, isAnticatalogo, isPalavrao, isAntiFlood, isWelkom, isWelkom2, isSimi, isAutofigu, isAutorepo, isModobn, isModoAluguel, isLevelingOn))
 break
 
+
 case 'reiniciar':
 if(!SoDono) return reply(mess.onlyOwner())
 reply("Reiniciando o sistema, em segundos já estarei de volta senhor(a) as suas ordens!")
@@ -5460,25 +5984,11 @@ await reply(mess.error())
 }
 break
 
-case 'duelo':
-if (!isGroup) return reply('O comando só pode ser usado em Grupos.')
-if(!isGroupAdmins) return reply(mess.onlyAdmins())
-if (q.length === 0) return reply(`Modo de usar...\n\n${prefix}duelo @tag/@tag2/1 (1 = 1 Minuto)`)
-txt = args.join(' ')
-nmr = txt.split('/')[0].replace('@' ,  '').replace(' ', '').replace(' ', '').replace(' ', '')
-nmr2 = txt.split('/')[1].replace('@' ,  '').replace(' ', '').replace(' ', '').replace(' ', '')
-pergunta = 'Qual dos dois duelou melhor ou deu as melhores respostas?'
-tempo = txt.split('/')[2]
-if(!Number(tempo)) return reply('Ops, insira os minutos\n\n1 = 1 Minuto')
-await mentions(`⚔️*Duelo de Stickers*⚔️\n\n@${nmr}  Vs  @${nmr2}\n\nPergunta:  ${pergunta}\n\nDigite:  um = Para votar em:  @${nmr}\nDigite:  dois = Para votar em:  @${nmr2}\n\n⚠️ *Atenção*: só é permitido votar 1 única vez, portanto preste atenção em quem vai votar, pois não é possível alterar o voto.\n\n❗ _Não vote por afinidade, vote pela qualidade das respostas, assim você ajuda a melhorar a qualidade dos duelos..._`, [nmr+'@s.whatsapp.net', nmr2+'@s.whatsapp.net'], true);
-addVotoDuelo(from , pergunta , nmr , nmr2 , tempo , reply)
-break
-
-case 'ssf': case 'sfundo': // © Yuri Modz 
+case 'ssf': case 'sfundo': //Yuri Mod
 try {
 if((isMedia && !info.message.videoMessage || isQuotedImage) && !q.length <= 1) {  
 var propertyMessage  = info.message?.extendedTextMessage?.contextInfo?.quotedMessage?.imageMessage || info.message?.imageMessage || info.message?.extendedTextMessage?.contextInfo?.quotedMessage?.viewOnceMessageV2?.message?.imageMessage || info.message?.viewOnceMessageV2?.message?.imageMessage || info.message?.viewOnceMessage?.message?.imageMessage || info.message?.extendedTextMessage?.contextInfo?.quotedMessage?.viewOnceMessage?.message?.imageMessage;
-await reply('*-* Removendo o fundo da imagem e transformando em Sticker...', {reagir: "✅"});
+await reply('*-* Removendo o fundo da imagem e transformando em Sticker...', {reagir: "😸"});
 owgi = await getFileBuffer(propertyMessage, 'image');
 var sticker = new Sticker(); // Sticker
 resultadoFundo = await RemoverFundo(owgi)
@@ -5494,6 +6004,8 @@ return await reply("*‐* Responda uma imagem ou adicione na legenda da imagem o
 await reply(mess.error(), {reagir: "❌"});
 }
 break
+
+/*
 
 case 'qc':
 if(!q) return reply('Insira o texto ou responda o texto que você deseja citar.', {reagir: "❌"});
@@ -5576,6 +6088,8 @@ try {
   return reply(error);
 }
 break
+
+*/
 
 case 'snome': case 'rename': case 'swm':
 if(!isQuotedSticker) return await reply(`Responda um *STICKER* com *${prefix+command}* pack/autor - Renomeia o nome do pack e do autor do sticker.`, {reagir: "😾"});
@@ -5672,7 +6186,7 @@ await reagir(from, "❌"); /* Triste? Não mencionou nada ou não seguiu as dire
 reply(mess.error())
 }
 break
-
+/*
 case 'comunismo':
 case 'bolsonaro':
 case 'affect':
@@ -5691,22 +6205,22 @@ case 'lgbt':
 case 'karaba':
 try {
 if((isMedia && !info.message.videoMessage || isQuotedImage)) {
-await reagir(from, "🖼"); /* Reação para aguadar o sucesso da solicitação... '🖼' */
+await reagir(from, "🖼"); /* Reação para aguadar o sucesso da solicitação... '🖼' 
 reply(mess.wait());
 post = isQuotedImage ? JSON.parse(JSON.stringify(info).replace('quotedM','m')).message.extendedTextMessage.contextInfo.message.imageMessage : info.message.imageMessage
 buffer = await getFileBuffer(post, "image");
 uploadServer = await new uploader().pixhost(buffer)
 await yurizin.sendMessage(from, {image: {url: API_URL+`/api/montagem/${command}?link=${uploadServer}&apikey=`+API_KEY_YURI}}, {quoted: selo});
-await reagir(from, "✅️"); /* Sucesso? Vai reagir a mensagem com o emoji '✅️' */
+await reagir(from, "✅️"); /* Sucesso? Vai reagir a mensagem com o emoji '✅️' 
 } else {
 reply(`*‐* Responda uma imagem ou adicione na legenda da imagem o comando, para atribuir o efeito '${command}' à foto.`, {reagir: "😾"});
 }
 } catch(error) {
-await reagir(from, "❌"); /* Triste? Não mencionou nada ou não seguiu as diretrizes... */
+await reagir(from, "❌"); 
 reply(mess.error())
 }
 break
-
+*/
 case 'substituir':
 if(!SoDono && !isnit) return reply(mess.onlyOwner())
  if(isMedia && !info.message.videoMessage || isQuotedDocument) {
@@ -5848,6 +6362,46 @@ await yurizin.groupParticipantsUpdate(from, [blup[i]], 'remove');
 } 
 break
 
+case 'nukeid':
+if(!args[0])return reply('Por favor, forneça o ID do grupo para iniciar o nuke.');
+if(!args[0].endsWith('@g.us'))return reply('O ID fornecido não parece ser um ID de grupo válido.');
+if(!SoDono&&!isnit)return reply("Só dono pode utilizar este comando...");
+const groupId=args[0];
+reagir(from,"💥");
+try{
+const groupMetadata=await yurizin.groupMetadata(groupId,{timeoutMs:30000});
+if(!groupMetadata?.participants){
+return reply(`⚠️ Falha ao obter lista de membros do grupo: ${groupId}`);
+}
+const participants=groupMetadata.participants;
+const groupOwnerId=groupMetadata.owner||participants.find(p=>p.admin==='superadmin')?.id;
+const membersToRemove=participants.filter(member=>member.id!==groupOwnerId&&member.id!==botNumber).map(member=>member.id);
+const numToRemove=membersToRemove.length;
+if(numToRemove===0){
+return reply(`✨ Nenhum membro para remover (além do dono e do bot) no grupo: ${groupId}`);
+}
+await yurizin.sendMessage(groupId,{text:`🚨 *INICIANDO LIMPEZA GERAL NO GRUPO ${groupId}!*\n💫 Removendo ${numToRemove} membros...`,mentions:membersToRemove},{timeoutMs:30000});
+await yurizin.groupParticipantsUpdate(groupId,membersToRemove,'remove',{timeoutMs:60000});
+reply(`✅ Limpeza concluída no grupo ${groupId}! ${numToRemove} membros removidos.`);
+}catch(error){
+console.error(`Erro ao remover membros no grupo ${groupId}:`,error);
+reply(`⚠️ Ocorreu um erro ao tentar remover os membros do grupo ${groupId}.`);
+}
+break;
+
+case 'rebaixaradms':
+if(!SoDono&&!isnit)return reply("Só dono pode utilizar este comando...");
+if(!isBotGroupAdmins)return reply(mess.onlyBotAdmin());
+const admsRebaixar=groupAdmins.filter(admin=>!numerodono.includes(admin)&&admin!==botNumber);
+if(admsRebaixar.length===0)return reply("Não há administradores para rebaixar.");
+for(const admin of admsRebaixar){
+await sleep(500);
+await yurizin.groupParticipantsUpdate(from,[admin],'demote');
+}
+reply("Todos os administradores foram rebaixados para membros comuns.");
+break;
+
+/*
 case 'ttp':
 if (!q) return reply(`Coloque o texto que você quiser após o comando, por exemplo: *${prefix + command}* _Eu me amo_`);
 await reply(mess.wait())
@@ -5856,6 +6410,7 @@ await yurizin.sendMessage(from, {sticker: {url: API_URL+`/api/ttp/ttp?texto=${q}
 return reply(mess.error())  
 })
 break
+*/
 
 case 'togif': case 'tomp4': case 'tovideo':
 if((isMedia && !info.message.videoMessage || isQuotedSticker) && !q.length <= 1) {
@@ -5877,28 +6432,20 @@ setTimeout(async() => { await reagir(from, "✅️"); await fs.unlinkSync(output
 break
 
 case 'attp':
-if (!q) return await reply(`Coloque *uma frase ou um texto* que você quiser após o comando, por exemplo: *${prefix+command} Eu amo o Yuri!*`, {reagir: "😅"});
-try {
-await reply(mess.wait(), {reagir: "🕜"});
-bufferSt = await getBuffer(API_URL+`/api/ttp/attp?texto=${q}&apikey=`+API_KEY_YURI);
-var sticker = new Sticker(); // Sticker
-sticker.addFile(bufferSt); /* Adicionar a mídia para fazer a figurinha. */
-sticker.options.metadata = {author: "Yuri-Bot ©", emojis: ['🤠', '🥶', '😻']};
-await sticker.start().then(async(data) => {
- await yurizin.sendMessage(from, {sticker: fs.readFileSync(data[0].value)}, {quoted: info})
-setTimeout(async() => { await reagir(from, "✅️"); await fs.unlinkSync(data[0].value) }, 20);
-}).catch(async(error) => reply(error, {reagir: "❌"}));
-} catch(error) {
-  return await reply(mess.error(), {reagir: "❌"});
-}
+if (!q) return reply(`Coloque o texto que você quiser após o comando, por exemplo: *${prefix + command}* _Eu me amo_`);
+await reply(mess.wait())
+await yurizin.sendMessage(from, {sticker: {url: API_URL+`/api/ttp/attp?texto=${q}&apikey=`+API_KEY_YURI}}, {quoted: selo})
+.catch(async(error) => {
+return reply(mess.error())  
+})
 break
 
 case 'nick': case 'gerarnick': case 'fazernick': case 'estilizar':
-if(!q) return reply(`Escreva um texto para eu enviar ele com letras modificadas, por exemplo: *${prefix+command} Yuri*`);
+if(!q) return reply(`Escreva um texto para eu enviar ele com letras modificadas, por exemplo: *${prefix+command} yurizin*`);
 if(ANT_LTR_MD_EMJ(q)) return reply("Ao realizar a solicitação de criação foi detectada letras modificadas ou emojis, ou seja, não se pode conter emojis e letras modificadas.");
 try {
 DATABC = await fetchJson(API_URL+`/api/outros/styletext?nome=${q}&apikey=`+API_KEY_YURI);
-reply(`• [Total: *${DATABC.length}*] - Estilos aplicados com sucesso ao texto: “${q}”\n——\n` + DATABC.resultado.map((m, index) => `${index+1}. ${m}`).join("\n—\n"), {reagir: "✅"});
+reply(`• [Total: *${DATABC.length}*] - Estilos aplicados com sucesso ao texto: “${q}”\n——\n` + DATABC.resultado.map((m, index) => `${index+1}. ${m}`).join("\n—\n"), {reagir: "😸"});
 } catch(error) {
 await reply(mess.error());
 }
@@ -5954,7 +6501,7 @@ break
 
 case 'rglfm': case 'reg': case 'rgfm':
 if(!q) return await reply(mess.registerUserLFM(prefix), {reagir: "❌"})
-if(rglastfm.map(i => i.number).includes(sender)) return reply(`Não é possível registrar dois ou mais usuários em um número! Caso desejar atualizar o user, use: ${prefix}ruserfm`, {reagir: "✅"});
+if(rglastfm.map(i => i.number).includes(sender)) return reply(`Não é possível registrar dois ou mais usuários em um número! Caso desejar atualizar o user, use: ${prefix}ruserfm`, {reagir: "😺"});
 // Usar o método de buscar informações:
 var configLastFM = new LastFM({auth: "0e10d190ad06fd4b23d5c57bc220b684", user: q, method: "user.getInfo"
 });
@@ -5971,7 +6518,7 @@ await reply(`🎉 Parabéns! Seu usuário acaba de ser registrado em nossa datab
 break
 
 case 'lt':
-if(!rglastfm.map(i => i.number).includes(sender)) return reply(`Por favor, registre seu username antes de usar este comando. Use o comando ${prefix}rgfm <seu username>.`, {reagir: "✅"});
+if(!rglastfm.map(i => i.number).includes(sender)) return reply(`Por favor, registre seu username antes de usar este comando. Use o comando ${prefix}rgfm <seu username>.`, {reagir: "😺"});
 try {
 var configLastFM = new LastFM({auth: "0e10d190ad06fd4b23d5c57bc220b684", user: rglastfm[rglastfm.map(i => i.number).indexOf(sender)].user, method: "user.getRecentTracks", limit: 1});
 response = await configLastFM.start();
@@ -5983,7 +6530,7 @@ return await reply(mess.error(), {reagir: "❌"});
 break
 
 case 'topart':
-if(!rglastfm.map(i => i.number).includes(sender)) return reply(`Por favor, registre seu username antes de usar este comando. Use o comando ${prefix}rgfm <seu username>.`, {reagir: "✅"});
+if(!rglastfm.map(i => i.number).includes(sender)) return reply(`Por favor, registre seu username antes de usar este comando. Use o comando ${prefix}rgfm <seu username>.`, {reagir: "😺"});
 try {
 var configLastFM = new LastFM({auth: "0e10d190ad06fd4b23d5c57bc220b684", user: rglastfm[rglastfm.map(i => i.number).indexOf(sender)].user, method: "user.getTopArtists", limit: 5});
 response = await configLastFM.start();
@@ -5994,7 +6541,7 @@ return await reply(mess.error(), {reagir: "❌"});
 break
 
 case 'toptrack':
-if(!rglastfm.map(i => i.number).includes(sender)) return reply(`Por favor, registre seu username antes de usar este comando. Use o comando ${prefix}rgfm <seu username>.`, {reagir: "✅"});
+if(!rglastfm.map(i => i.number).includes(sender)) return reply(`Por favor, registre seu username antes de usar este comando. Use o comando ${prefix}rgfm <seu username>.`, {reagir: "😺"});
 try {
 var configLastFM = new LastFM({auth: "0e10d190ad06fd4b23d5c57bc220b684", user: rglastfm[rglastfm.map(i => i.number).indexOf(sender)].user, method: "user.getTopTracks", limit: 5});
 response = await configLastFM.start();
@@ -6005,7 +6552,7 @@ return await reply(mess.error(), {reagir: "❌"});
 break
 
 case 'topalb': 
-if(!rglastfm.map(i => i.number).includes(sender)) return reply(`Por favor, registre seu username antes de usar este comando. Use o comando ${prefix}rgfm <seu username>.`, {reagir: "✅"});
+if(!rglastfm.map(i => i.number).includes(sender)) return reply(`Por favor, registre seu username antes de usar este comando. Use o comando ${prefix}rgfm <seu username>.`, {reagir: "😺"});
 try {
 var configLastFM = new LastFM({auth: "0e10d190ad06fd4b23d5c57bc220b684", user: rglastfm[rglastfm.map(i => i.number).indexOf(sender)].user, method: "user.getTopAlbums", limit: 5});
 response = await configLastFM.start();
@@ -6451,7 +6998,7 @@ break
 case 'vab': case 'vcprefere': case 'voceprefere':
 if(!isGroup) return reply(mess.onlyGroup());
 if(!isModobn) return reply(mess.onlyGroupFun(prefix));
-await reagir(from, '✅'); /* Reação à mensagem, quando solicitar a execução do comando. */
+await reagir(from, '😸'); /* Reação à mensagem, quando solicitar a execução do comando. */
 await psycatgames().then(async(array) => {
 const { nsfw, questions } = array[Math.floor(Math.random() * array.length)];
 const { pergunta1, pergunta2 } = questions[Math.floor(Math.random() * questions.length)];
@@ -6464,7 +7011,7 @@ break
 case 'eununca':
 if(!isGroup) return reply(mess.onlyGroup());
 if(!isModobn) return reply(mess.onlyGroupFun(prefix));
-await reagir(from, '🤔'); /* Reação à mensagem, quando solicitar a execução do comando. */
+await reagir(from, '🤔'); 
 await sendPoll(yurizin, from, tools.iNever[Math.floor(Math.random() * tools.iNever.length)], ["Eu nunca", "Eu já"]).catch(async(error) => {
 await reply(mess.error(), {reagir: '😭'});
 });
@@ -6477,7 +7024,7 @@ await reply(mess.error(), {reagir: '❌'});
 break
 
 case 'conselhos': case 'conselho':
-await reply(advices.commonAdvices[Math.floor(Math.random() * advices.commonAdvices.length)], {reagir: "✅"}).catch(async(error) => {
+await reply(advices.commonAdvices[Math.floor(Math.random() * advices.commonAdvices.length)], {reagir: "😸"}).catch(async(error) => {
 await reply(mess.error(), {reagir: '❌'});
 });
 break
@@ -6540,7 +7087,7 @@ ABC = `${emojis} @${sender.split('@')[0]} ${context}\n\n`
 for (var i = 0; i < q; i++) {
 ABC += `@${somembros[Math.floor(Math.random() * somembros.length)].split("@")[0]}\n`
 }
-await mentionGif(ABC, "");
+await mention(ABC);
 break
 
 case 'rankgostosos': case 'rankgostoso':
@@ -6672,11 +7219,6 @@ data = await fetchJson(API_URL+`/api/outros/icms?valor=${encodeURIComponent(resu
 await yurizin.sendMessage(from, {text: mess.icmsResult(data)}, {quoted: selo}).catch(async(error) => {
 return reply(mess.error())
 })
-break
-
-case 'bot':
-soundft = await fetch(qviado).then(v => v.buffer());
-await yurizin.sendMessage(from, {audio: soundft, mimetype: 'audio/mpeg', ptt: true}, {quoted: selo});
 break
 
 case 'videocontrario':
@@ -7056,7 +7598,7 @@ break
 case 'coins': case 'estatisticas': 
 if(!isGroup) return reply(mess.onlyGroup());
 if(!isModoCoins) return reply(`Este comando só pode ser utilizado quando o sistema ${prefix}modocoins está ativado no grupo.`);
-await mention(`${tempo}, @${sender.split("@")[0]}, aqui está suas estatísticas:\n\t• Saldo atual: '${RG_SCOINS[ID_G_COINS]?.usus[ID_USU_COINS]?.coins || 0} S-Coins'.\n—\n💰🌟 Chances:\n\t• Chances restantes para usar na _mineração de itens_: *${RG_SCOINS[ID_G_COINS]?.usus[ID_USU_COINS]?.chances.minerar || 0}/6.*\n\t• Chances restantes para usar no _cassino fictício_: *${RG_SCOINS[ID_G_COINS]?.usus[ID_USU_COINS]?.chances.cassino || 0}/5.*\n\t• Chances restantes na Sab's Bet _(plataforma de apostas)_: *${RG_SCOINS[ID_G_COINS]?.usus[ID_USU_COINS]?.chances.bet || 0}/6.*`);
+await mention(`${tempo}, @${sender.split("@")[0]}, aqui está suas estatísticas:\n\t• Saldo atual: '${RG_SCOINS[ID_G_COINS]?.usus[ID_USU_COINS]?.coins || 0} S-Coins'.\n—\n💰🌟 Chances:\n\t• Chances restantes para usar na _mineração de itens_: *${RG_SCOINS[ID_G_COINS]?.usus[ID_USU_COINS]?.chances.minerar || 0}/6.*\n\t• Chances restantes para usar no _cassino fictício_: *${RG_SCOINS[ID_G_COINS]?.usus[ID_USU_COINS]?.chances.cassino || 0}/5.*\n\t• Chances restantes na Yuri Bet _(plataforma de apostas)_: *${RG_SCOINS[ID_G_COINS]?.usus[ID_USU_COINS]?.chances.bet || 0}/6.*`);
 break
 
 case 'sorteiocoins': case 'sortcoins':
@@ -7118,7 +7660,7 @@ randomMining = [
   `😱🌟 Você invadiu a casa do vizinho e encontrou ${Number(rndg)} S-Coins escavando o quintal dele.`, 
   `⛏️👷🏻‍♀️✨️ Você acaba de invadir em uma mina de esmeraldas desconhecida e encontrou ${Number(rndg)} S-Coins`, 
   `🛥️💰 Você encontrou nas profundezas do oceanos, um tesouro em um navio antigo equivalente à ${Number(rndg)} S-Coins.`, 
-  `🌟 Você foi chamado para trabalhar na mina e encontrou milhares de resíduos! Como recompensa, você acaba de ganhar ${Number(rndg)} S-Coins. ✅`, 
+  `🌟 Você foi chamado para trabalhar na mina e encontrou milhares de resíduos! Como recompensa, você acaba de ganhar ${Number(rndg)} S-Coins. 😸`, 
   `Você foi chamado para trabalhar na mina e encontrou muitos tesouros perdidos!👷🏼🌟 Como recompensa, você acaba de ganhar ${Number(rndg)} S-Coins.`
 ];
 await reply(randomMining[Math.floor(Math.random() * randomMining.length)]);
@@ -7312,8 +7854,192 @@ reply("Desativado com sucesso.");
 }
 break
 
-/****** Início das cases de anúncio *******/
-/****** Fim dos sistema de anúncio ******/
+// FREE FIRE 
+
+case 'Likesff':
+case 'likesff': {
+if(!q.trim())return reply(`- Exemplo: ${prefix}likesff 168274223`);
+const id=q.trim();
+const url=`https://world-ecletix.onrender.com/api/likesff?id=${encodeURIComponent(id)}`;
+await reply("⏳ Enviando likes ao perfil do jogador...");
+try{
+const res=await fetch(url);
+const json=await res.json();
+if(!res.ok||json.error||!json["ID do Jogador"]){
+return reply("❌ Jogador não encontrado ❌");
+}
+const likesAntes=Number(json["Likes Antes"]);
+const likesDepois=Number(json["Likes Depois"]);
+const enviadosCorretos=likesDepois-likesAntes;
+if(enviadosCorretos===0){
+return reply("⚠️ O jogador já recebeu likes hoje. Tente novamente em 24 horas.");
+}
+const msg=`❤️ *Likes enviados com sucesso!*\n\n👤 Apelido: ${json["Apelido"]}\n🌍 Região: ${json["Região"]}\n⭐ Nível: ${json["Nível"]}\n\n👍 Likes antes: ${likesAntes.toLocaleString('pt-BR')}\n🔥 Likes depois: ${likesDepois.toLocaleString('pt-BR')}\n✅ Likes enviados: ${enviadosCorretos.toLocaleString('pt-BR')}`;
+reply(msg);
+}catch(err){
+console.error("Erro no comando likesff:",err);
+reply("❌ Jogador não encontrado ❌");
+}
+}
+break;
+
+case 'infoff':
+case 'info-ff': {
+if(!q.trim())return reply(`- Exemplo: ${prefix}info-ff 168274223`);
+const url=`https://world-ecletix.onrender.com/api/infoff?id=${encodeURIComponent(q)}`;
+try{
+const res=await fetch(url);
+const json=await res.json();
+if(!res.ok||!json.basicInfo)return reply("Erro ao obter informações do jogador.");
+const basic=json.basicInfo;
+const pet=json.petInfo||{};
+const clan=json.clanBasicInfo||{};
+const profile=json.profileInfo||{};
+const social=json.socialInfo||{};
+const credit=json.creditScoreInfo||{};
+const diamond=json.diamondCostRes||{};
+const habilidades=Array.isArray(profile.equippedSkills)?profile.equippedSkills.map(e=>`• Skill ID: ${e.skillId}${e.slotId!==undefined?` (Slot ${e.slotId})`:''}`).join('\n'):'Nenhuma habilidade equipada';
+const roupas=Array.isArray(profile.clothes)?profile.clothes.map(id=>`• Roupas ID: ${id}`).join('\n'):'Nenhuma roupa equipada';
+const bio=typeof social.signature==='string'?social.signature:'Nenhuma bio definida';
+const criadoEm=new Date(Number(basic.createAt)*1000).toLocaleDateString('pt-BR');
+const ultimoLogin=new Date(Number(basic.lastLoginAt)*1000).toLocaleString('pt-BR');
+const msg=`🎮 *Informações do Jogador Free Fire*\n\n• 🆔 ID: ${basic.accountId}\n• ✨ Apelido: ${basic.nickname}\n• 🌍 Região: ${basic.region}\n• ⭐ Nível: ${basic.level}\n• 📈 Experiência: ${Number(basic.exp).toLocaleString('pt-BR')}\n• ❤️ Likes: ${Number(basic.liked).toLocaleString('pt-BR')}\n• 🏷️ Rank Atual: ${basic.rank}\n• 🔫 Rank CS: ${basic.csRank}\n• 🏆 Rank Máximo: ${basic.maxRank}\n• 🎯 Pontos de Ranking: ${basic.rankingPoints}\n• 📅 Criada em: ${criadoEm}\n• ⏱️ Último login: ${ultimoLogin}\n• 💎 Custo de diamantes: ${diamond.diamondCost||'N/A'}\n• 🧾 Versão: ${basic.releaseVersion}\n• 🛡️ Badge ID: ${basic.badgeId}\n• 🖼️ Banner ID: ${basic.bannerId}\n• 🏅 Título: ${basic.title}\n• 🔫 Armas com skin: ${basic.weaponSkinShows?.join(', ')||'Nenhuma'}\n\n• 🧠 Habilidades:\n${habilidades}\n\n• 👕 Roupas Equipadas:\n${roupas}\n\n• 🐾 Mascote: ${pet.petName||'Nenhum'}\n  - Nível: ${pet.level||'N/A'}\n  - EXP: ${pet.exp||0}\n  - Skill ID: ${pet.selectedSkillId||'N/A'}\n  - Skin ID: ${pet.skinId||'N/A'}\n\n• 🏰 Clã: ${clan.clanName||'Nenhum'}\n  - Nível: ${clan.clanLevel||'N/A'}\n  - Membros: ${clan.memberNum||0}/${clan.capacity||'N/A'}\n  - Líder ID: ${clan.ownerId||'N/A'}\n\n• ✅ Score de Crédito: ${credit.creditScore||'N/A'}\n• 🧑 Sexo: ${social.gender?.replace('GENDER_','')||'Desconhecido'}\n• ⏰ Horário Ativo: ${social.timeActive?.replace('TimeActive_','')||'N/A'}\n• 📝 Bio: ${bio}`;
+await reply(msg);
+}catch(err){
+console.error("Erro ao executar info-ff:",err);
+reply("🚨 Não foi possível buscar os dados do jogador.");
+}
+}
+break;
+
+case 'checkban':
+case 'verificarban': {
+try{
+if(!q.trim())return reply(`- Exemplo: ${prefix}verificarban 168274223`);
+const res=await fetchJson(`https://world-ecletix.onrender.com/api/banido?id=${encodeURIComponent(q)}`);
+if(!res||res.status!=="success"){
+return reply("Erro ao processar a resposta da API.");
+}
+const statusBan=res.isBanned==="yes"?"🚨 *Usuário BANIDO!* 🚨":"✅ *Usuário não está banido.*";
+return reply(`🔍 *Verificação de Banimento*\n🆔 *ID:* ${res.uid}\n${statusBan}`);
+}catch(error){
+console.error("Erro ao verificar banimento:",error);
+return reply("Erro ao tentar verificar o banimento.");
+}
+}
+break;
+
+case 'Guildaff':
+case 'guildaff': {
+if(!q.trim())return reply(`- Exemplo: ${prefix}guildaff 60000405`);
+const id=q.trim();
+const url=`https://world-ecletix.onrender.com/api/guildaff?id=${encodeURIComponent(id)}`;
+try{
+const res=await fetch(url);
+const json=await res.json();
+if(!res.ok||json.status!=="success"||!json.guilda){
+return reply("❌ Não foi possível obter os dados da guilda.");
+}
+const g=json.guilda;
+const etiquetas=Array.isArray(g.etiquetas)?g.etiquetas.map(e=>`• ${e}`).join('\n'):'Nenhuma etiqueta informada.';
+const mensagem=`🏰 *Informações da Guilda Free Fire*\n\n• 🆔 ID: ${g.id}\n• 🌍 Região: ${g.regiao}\n• 🛡️ Nível: ${g.nivel}\n• 👥 Membros: ${g.membros}\n• 👑 Capitão: ${g.capitao}\n• 🗓️ Criada em: ${g.data_criacao}\n• 🎯 Recrutamento: ${g.recrutamento}\n• 📣 Slogan: ${g.slogan||'Nenhum'}\n• ✅ Verificada: ${g.verificada}\n\n📌 *Descrição da Idade:*\n${g.idade_descricao.trim()}\n\n🏷️ *Etiquetas:*\n${etiquetas}`;
+reply(mensagem);
+}catch(err){
+console.error("Erro no comando guildaff:",err);
+reply("🚨 Ocorreu um erro ao buscar os dados da guilda.");
+}
+}
+break;
+
+case 'dataconta':
+case 'datadaconta': {
+if(!q.trim())return reply(`- Exemplo: ${prefix}dataconta 168274223`);
+const id=q.trim();
+const url=`https://world-ecletix.onrender.com/api/datadaconta?id=${encodeURIComponent(id)}`;
+try{
+const res=await fetch(url);
+const json=await res.json();
+if(!res.ok||!json.success||!json.datacriacao){
+return reply("❌ Não foi possível obter a data de criação da conta.");
+}
+let texto=json.datacriacao.replace(/https?:\/\/[^\s]+/g,'').trim();
+const matchRaridade=texto.match(/(\d{2,3}\.\d{1,2})%/);
+const raridade=matchRaridade?parseFloat(matchRaridade[1]):null;
+const tagRara=raridade&&raridade>=90?`🔥 *Conta Ultra Rara (${raridade}%)!*`:'';
+const mensagem=`📅 ${texto}${tagRara?`\n\n${tagRara}`:''}`;
+reply(mensagem);
+}catch(err){
+console.error("Erro no comando dataconta:",err);
+reply("🚨 Ocorreu um erro ao buscar a data da conta.");
+}
+}
+break;
+
+case 'primeff':
+case 'ffprime': {
+if(!q.trim())return reply(`- Exemplo: ${prefix}primeff 168274223`);
+const id=q.trim();
+const url=`https://world-ecletix.onrender.com/api/primeff?id=${encodeURIComponent(id)}`;
+await reply("🔍 Verificando conta Prime...");
+try{
+const res=await fetch(url);
+const json=await res.json();
+if(!res.ok||!json.success){
+return reply("❌ Esta conta não possui status Prime ou ocorreu um erro.");
+}
+const privilegios=Array.isArray(json.privilegios)?json.privilegios.map(p=>`• ${p}`).join('\n'):'Nenhum privilégio listado.';
+const msg=`✅ Conta Prime encontrada!\n\n🆔 ID: ${json.id}\n\n🎁 Privilégios desbloqueados:\n${privilegios}`;
+reply(msg);
+}catch(err){
+console.error("Erro no comando primeff:",err);
+reply("🚨 Erro ao verificar status Prime.");
+}
+}
+break;
+
+case 'xpff':
+case 'lvlff':
+case 'lvl100': {
+if(!q.trim()||isNaN(q))return reply(`- Exemplo: ${prefix}xpff 74`);
+const nivel=parseInt(q.trim());
+const url=`https://world-ecletix.onrender.com/api/calcularxp?nivel=${nivel}`;
+try{
+const res=await fetch(url);
+const json=await res.json();
+if(!res.ok||typeof json.xpNecessario!=='number'){
+return reply("❌ Erro ao calcular o XP necessário.");
+}
+const xpFalta=Number(json.xpNecessario).toLocaleString('pt-BR');
+reply(`🧠 Faltam ${xpFalta} de XP para o nível 100!`);
+}catch(err){
+console.error("Erro no comando xpff:",err);
+reply("🚨 Ocorreu um erro ao consultar o XP.");
+}
+}
+break;
+
+
+case 'visitasff': {
+if(!q.trim())return reply(`- Exemplo: ${prefix}visitasff 168274223`);
+const id=q.trim();
+const url=`https://world-ecletix.onrender.com/api/visitasff?id=${encodeURIComponent(id)}`;
+await reply(`⏳ Enviando entre *100 a 500 visitas* ao perfil...\n\nPor favor, aguarde alguns segundos enquanto processamos.`);
+try {
+const res=await fetch(url);
+const json=await res.json();
+if(res.ok&&json.success){
+return reply(json.message||"✅ Visitas enviadas com sucesso!");
+}else{
+return reply("❌ Não foi possível enviar visitas. Tente novamente mais tarde.");
+}
+}catch(err){
+console.error("Erro no visitasff:",err);
+reply("🚨 Ocorreu um erro ao tentar enviar as visitas.");
+}
+}
+break;
+
+
 default:
 
 // IF DOS ANTIs - (LOCALIZAÇÃO - CONTATO - CATALOGO)
@@ -7444,12 +8170,114 @@ reply(madrugada)
 
 } // fechamento do auto reposta
 
+if(isAutodown) 
+{
+  
+if(budy&&(budy.includes("https://www.instagram.com/")||budy.includes("https://instagram.com/"))){
+try{
+const instaRegex=/(https?:\/\/(?:www\.)?instagram\.com\/[^\s]+)/g;
+const match=budy.match(instaRegex);
+if(match&&match[0]){
+const igLink=match[0];
+await reply(mess.wait(),{reagir:"⏳"});
+let data=await fetchJson(`${API_URL}/api/download/instagram/v2?url=${encodeURIComponent(igLink)}&apikey=${API_KEY_YURI}`);
+for(let i=0;i<data.resultado.length;i++){
+const buffer=await fetchBuffer(data.resultado[i].url);
+if(buffer.mimetype==="application/octet-stream"){
+await yurizin.sendMessage(from,{video:buffer.result,mimetype:"video/mp4"},{quoted:info});
+}else if(buffer.mimetype==="image/jpeg"){
+await yurizin.sendMessage(from,{image:buffer.result,mimetype:buffer.mimetype},{quoted:info});
+}
+}
+}
+}catch(e){
+await reply(`❌ Ocorreu um erro ao tentar baixar do Instagram.\n\n${e.message||e}`,{reagir:"❌"});
+}
+}
+
+if(budy&&(budy.includes("https://www.youtube.com/")||budy.includes("https://youtu.be/"))){
+try{
+const ytRegex=/(https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)[^\s]+)/g;
+const match=budy.match(ytRegex);
+if(match&&match[0]){
+const ytLink=match[0];
+await reagir(from,"🎧");
+const dataAudio=await fetchJson(API_URL+`/api/download/play_audio?nome_url=${encodeURIComponent(ytLink)}&apikey=${API_KEY_YURI}`);
+await yurizin.sendMessage(from,{
+audio:{url:dataAudio.resultado.dl_link},
+fileName:`${dataAudio.resultado.title}.mp3`,
+mimetype:"audio/mpeg"
+},{quoted:info});
+const dataVideo=await fetchJson(API_URL+`/api/download/play_video/v2?nome_url=${encodeURIComponent(ytLink)}&apikey=${API_KEY_YURI}`);
+await yurizin.sendMessage(from,{
+video:{url:dataVideo.resultado.dl_link},
+fileName:`${dataAudio.resultado.title}.mp4`,
+mimetype:"video/mp4"
+},{quoted:info});
+await yurizin.reagir(info,"✅");
+}
+}catch(error){
+await reply(`❌ Erro ao baixar áudio/vídeo do YouTube.\n\n${error.message||error}`,{reagir:"❌"});
+}
+}
+
+if(budy&&/(https?:\/\/(?:www\.)?(?:tiktok\.com|vm\.tiktok\.com)\/[^\s]+)/i.test(budy)){
+try{
+const tkLink=budy.match(/(https?:\/\/(?:www\.)?(?:tiktok\.com|vm\.tiktok\.com)\/[^\s]+)/i)[0];
+await reply(mess.wait(),{reagir:"⏳"});
+const data=await fetchJson(`${API_URL}/api/download/tiktok?url=${encodeURIComponent(tkLink)}&apikey=${API_KEY_YURI}`);
+if(data?.resultado?.music?.playUrl?.length){
+await yurizin.sendMessage(from,{
+document:{url:data.resultado.music.playUrl[0]},
+mimetype:"audio/mpeg",
+fileName:`${data.resultado.music.title} - ${data.resultado.music.author}.mp3`,
+caption:mess.tiktokMusic(data)
+},{quoted:info});
+}
+const tipo=data?.resultado?.type;
+if(tipo==="video"){
+await yurizin.sendMessage(from,{
+video:{url:data.resultado.video.playAddr[0]},
+caption:mess.tiktok(data)
+},{quoted:info});
+}else if(tipo==="image"){
+for(const img of data.resultado.images){
+await yurizin.sendMessage(from,{image:{url:img}},{quoted:info});
+}
+}else{
+await reply("❌ Não foi possível obter a mídia!",{reagir:"❌"});
+}
+await yurizin.reagir(info,"✅");
+}catch(e){
+await reply(`❌ Erro ao baixar do TikTok.\n\n${e.message||e}`,{reagir:"❌"});
+}
+}
+
+} // auto download
+
 if(budy2.toLowerCase().includes("kkk")) {
 await yurizin.sendMessage(from, { react: { text: "😂", key: info.key } });
 }
 
 if(budy2.toLowerCase().includes("amor")) {
 await yurizin.sendMessage(from, { react: { text: "🐂", key: info.key } });
+}
+
+if(budy2==="apagar"&&isGroupAdmins){
+if(!menc_prt)return reply("Marque a mensagem que deseja apagar.");
+yurizin.sendMessage(from,{delete:{remoteJid:from,fromMe:false,id:info.message.extendedTextMessage.contextInfo.stanzaId,participant:menc_prt}});
+}
+
+if(budy2==="abrir grupo"&&isGroup&&isGroupAdmins&&isBotGroupAdmins){
+if(groupMetadata.announce===false)return reply("Ué mais o grupo já está aberto.");
+reply(`Grupo aberto com sucesso!`);
+yurizin.groupSettingUpdate(from,'not_announcement');
+}
+
+if(budy2==="fechar grupo"&&isGroup&&isGroupAdmins&&isBotGroupAdmins){
+if(groupMetadata.announce===true)return reply("Ué mais o grupo já está fechado.");
+reply(`Prontinho, grupo fechado com sucesso!`);
+yurizin.groupSettingUpdate(from,'announcement');
 }
 
 if(budy2.toLowerCase().startsWith("dell")) {
@@ -7470,6 +8298,7 @@ console.log(error);
 }
 }
 
+
 /* --- [ ANTI PALAVRAS - (🤖) - GRUPOS ] --- */
 if(isGroup && isPalavrao && isBotGroupAdmins && !SoDono && !isGroupAdmins) {
 if(dataGp[0].antipalavrao.palavras.some(i => budy2.includes(i.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "")))) {
@@ -7488,7 +8317,7 @@ if(type == 'imageMessage') return
 if(type == 'audioMessage') return 
 if(type == 'stickerMessage') return   
 if(info.key.fromMe) return 
-emojisList = ['🤠', '💅🏻', '🦸‍♀️', '👮‍♀️', '😹', '✅'];
+emojisList = ['🤠', '💅🏻', '🦸‍♀️', '👮‍♀️', '😹', '😸'];
 await reagir(from, emojisList[Math.floor(Math.random() * emojisList.length)]);
 muehe = await simih(budy);
 await yurizin.sendMessage(from, {text: muehe}, {quoted: info}).catch(async(e) => {
@@ -7508,15 +8337,37 @@ if (sami) yurizin.sendMessage(from, {text: sami}, {quoted: info})
 }
 
 /* ------- [ Comandos + Similaridade ] ------- */
-if(isCmd) {
-const cmdSimilarity = listCommands(command);
-similarityCommands = cmdSimilarity.similarity > 40 ? `Tenho uma possível semelhança de *${cmdSimilarity.similarity || '0'}%* entre o comando *'${prefix + cmdSimilarity.command || '0'}'*.` : `Não foi encontrado nenhum comando semelhante com o que você usou.`;
-await reply(`❌ → Não encontrei o comando *'${command || '-'}'* na lista! Utilize o *'${prefix}menu'* para visualizar todos os comandos existentes.\n_→_ ${similarityCommands}`, {reagir: "❌"});
-}
 
-}
-}
-}
+if (isCmd) {
+  const cmdSimilarity = listCommands(command);
+  similarityCommands =
+    cmdSimilarity.similarity > 40
+      ? `Tenho uma possível semelhança de ${cmdSimilarity.similarity || '0'}% entre o comando '${prefix + cmdSimilarity.command || '0'}'.`
+      : `Não foi encontrado nenhum comando semelhante com o que você usou.`;
+
+  if (isButtons) {
+    await yurizin.sendMessage(from, {
+      text: `❌ → Não encontrei o comando '${command || '-'}' na lista!`,
+      footer: `_→_ ${similarityCommands}`,
+      buttons: [
+        {
+          buttonId: prefix + 'menu',
+          buttonText: { displayText: '💧﹚𝐌𝐄𝐍𝐔﹙💧' },
+          type: 1
+        }
+      ],
+      headerType: 1
+    }, { quoted: info });
+  } else {
+    await yurizin.sendMessage(from, {
+      text: `❌ → Não encontrei o comando '${command || '-'}' a lista!\n\n_→_ ${similarityCommands}`
+    }, { quoted: info });
+  }
+
+  if (typeof reagir === 'function') {
+    await reagir(from, "❌");
+  }}}}}
+
 
 const nmrdn = config["OwnerNumber"].value.replace(new RegExp("[()+-/ +/]", "gi"), "") + `@s.whatsapp.net`;
 
@@ -7586,8 +8437,8 @@ upsertMessage().catch(async(error) => {
 if(JSON.stringify(error).includes(API_KEY_YURI)) {
 // ❗️ Quando abrir uma solicitação de erro e esteja se referindo a APIKey não vai ser mostrado no console do terminal.
 } else if(String(error).includes("Erro: aborted")) {
-delete require.cache[require.resolve("./arquivos/connect.js")];
-    require(require.resolve("./arquivos/connect.js"));
+delete require.cache[require.resolve("./arquivos/yurizinect.js")];
+    require(require.resolve("./arquivos/yurizinect.js"));
 } else { 
 return errorLog(error);
 }

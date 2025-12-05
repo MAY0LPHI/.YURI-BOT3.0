@@ -1,5 +1,5 @@
-const {"default": makeWASocket,downloadContentFromMessage, fetchLatestBaileysVersion, useMultiFileAuthState, makeInMemoryStore, DisconnectReason, WAGroupMetadata, relayWAMessage, MediaPathMap, mentionedJid, processTime, MediaType, MessageType, Presence, Mimetype, Browsers, delay, MessageRetryMap } = require('baileys');
-const LoggerB = require('baileys/lib/Utils/logger').default;
+const {"default": makeWASocket,downloadContentFromMessage, fetchLatestBaileysVersion, useMultiFileAuthState, makeInMemoryStore, DisconnectReason, WAGroupMetadata, relayWAMessage, MediaPathMap, mentionedJid, processTime, MediaType, MessageType, Presence, Mimetype, Browsers, delay, MessageRetryMap } = require('@cognima/walib');
+const LoggerB = require('@cognima/walib/lib/Utils/logger').default;
 
 /* --------- [ Módulos Necessários ] ---------- */
 const { Boom }  = require('@hapi/boom');
@@ -80,7 +80,7 @@ const DL = require('./arquivos/libraries/plugins/dl').default;
 const Shazam = require("./arquivos/libraries/plugins/acrcloud.js");
 const KarloAI = require("./arquivos/libraries/plugins/karloai.js");
 const { validmove, setGame } = require('./arquivos/tictactoe');
-const { addComandosId, deleteComandos, getComandoBlock, getComandos, addComandos } =  require('./arquivos/org/addcmd.js');
+const { addComandosId, deleteComandos, getComandoBlock, getComandos, addComandos, initSystemAdd } =  require('./arquivos/org/addcmd.js');
 const { whatMusicAr, palavrasANA, quizanimais, enigmaArchive, garticArchives } = require('./arquivos/org/jogos.js');
 const { countDays, timeDate, obeso, capitalizeFirstLetter, simih, TimeCount, getBuffer, fetchJson, fetchText, fetchBuffer, formatNumberDecimal, generateMessageID, convertBytes, getGroupAdmins, getMembros, isFiltered, addFilter, chyt, getExtension, getRandom, convertSticker, upload, nit, supre, formatDateOriginal } = require('./arquivos/libraries/functions.js');
 const VyroEngine = require("./arquivos/libraries/plugins/vyro.js");
@@ -95,16 +95,10 @@ const { tabela } = require('./arquivos/org/tabela.js');
 const uploader = require('./arquivos/libraries/upload.js');
 const LastFM = require("./arquivos/libraries/plugins/lastfm.js");
 const RemoverFundo = require("./arquivos/libraries/removebg.js");
-
 const ownerName = config["nameOwner"].value;
 const prefix = config["Prefix"].value;
 const channel = config["NewsletterConfig"].value;
 const NomeDoBot = config["botName"].value;
-
-const isJsonIncludes = (json, value) => {
-    if(JSON.stringify(json).includes(value)) return true;
-    return false;
-};
 
 /* ---- [ Letras Modificadas ou Emojis ] ---- */
 function ANT_LTR_MD_EMJ(str) {
@@ -241,7 +235,7 @@ module.exports = {
 /* Funções necessárias */
     TudoCelular, fetchBuffer, VyroEngine, DL, WebP_GIF, RemoverFundo, Shazam, addComandosId, deleteComandos, getComandoBlock, getComandos, uploader, addComandos, tabela, destrava, destrava2, mess, LastFM, psycatgames, vyroEngine, linguagem, getInfo, writeExifImg, writeExif, countDays, timeDate, obeso, capitalizeFirstLetter, simih, TimeCount, getBuffer, fetchJson, fetchText, formatNumberDecimal, generateMessageID, convertBytes, getGroupAdmins, getMembros, isFiltered, addFilter, chyt, getExtension, getRandom, convertSticker, upload, nit, supre,extractMetadata, addBanned, unBanned, BannedExpired, cekBannedUser, formatDateOriginal, validmove, setGame, whatMusicAr, palavrasANA, quizanimais, enigmaArchive, garticArchives, Sticker, KarloAI,
 /* JSONs nescessários */
-    rglastfm, creds, countMessage, sotoy, images, definitions, daily, muted, premium, ban, aluguel, limitefll, joguinhodavelhajs, ads, joguinhodavelhajs2, grupos, chaves, anotar, antispam, config, Limit_CMD, advices, tools, level2, packname, namoro1, namoro2, ads,
+    rglastfm, creds, countMessage, sotoy, images, definitions, daily, muted, premium, ban, aluguel, limitefll, joguinhodavelhajs, ads, joguinhodavelhajs2, grupos, chaves, anotar, antispam, config, Limit_CMD, advices, tools, level2, packname, namoro1, namoro2, ads, initSystemAdd,
 /* Outras funções */
-    isJsonIncludes, sayLog, inputLog, infoLog, successLog, errorLog, warningLog, extractAcronymFromCity, DLT_FL, getFileBuffer, shuffle, sleep, sendPoll, enviarfiguUrl, listCommands, fuzzySimilarity, extractDDD, eventLog,extractStateFromNumber, extractStateFromDDD, VerificarJSON, ANT_LTR_MD_EMJ, NomeDoBot, ownerName, prefix, channel, date, hora, time
+    sayLog, inputLog, infoLog, successLog, errorLog, warningLog, extractAcronymFromCity, DLT_FL, getFileBuffer, shuffle, sleep, sendPoll, enviarfiguUrl, listCommands, fuzzySimilarity, extractDDD, eventLog,extractStateFromNumber, extractStateFromDDD, VerificarJSON, ANT_LTR_MD_EMJ, NomeDoBot, ownerName, prefix, channel, date, hora, time
 }

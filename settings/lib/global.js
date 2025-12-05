@@ -358,25 +358,35 @@ exports.ytLimitDL = () => {
 }
 
 exports.ytSyntax = (prefix) => {
-  return `Por favor, insira o título de uma música ou vídeo, ou um URL sendo do YouTube ou YT Music, após o comando.\n–\n• Para baixar vídeos do YouTube, use _${prefix}pvid ou ${prefix}playvideo_, já para baixar em formato  de documento use _${prefix}playdoc_.\n→ *Observação:* Contém um limite de duração específico para download de vídeo e áudio, até 1 hora de duração.`;
+  return `Por favor, insira o título de uma música ou vídeo, após o comando.\n➡️ *Exemplo:* _${prefix}play Faz uma loucura por mim MC Cabelinho_\n–\n→ Caso o template buttons _(botões de múltipla escolha)_, a mídia será baixada em áudio, para baixar em formato de vídeo, _use *${prefix}playvideo*, para baixar em documento, use ${prefix}playdoc_\n→ *Observação:* Contém limite de duração específico para downloader, até 1 hora de duração.`;
 }
 
-exports.ytPlayQuery = (res, formatNumberDecimal) => {
-  return `*➡️ YouTube:*\n• Título: *${res.resultado[0].title}*\n• Descrição: *${res.resultado[0].description}*\n• Duração: *${res.resultado[0].timestamp}* _(${formatNumberDecimal(res.resultado[0].seconds)} seg)_\n• Publicação: *${res.resultado[0].ago}*\n• Visualizações: *${formatNumberDecimal(res.resultado[0].views)}*\n• Vídeo URL: *${res.resultado[0].url}*\n• Canal: *${res.resultado[0].author.name}*`
+exports.yt = (res, formatNumberDecimal) => {
+  return `*➡️ YouTube:*\n` +
+    `🎬 Título: *${res.resultado[0].title}*\n` +
+    `📝 Descrição: *${res.resultado[0].description}*\n` +
+    `⏱️ Duração: *${res.resultado[0].timestamp}* _(${formatNumberDecimal(res.resultado[0].seconds)} seg)_\n` +
+    `📅 Publicação: *${res.resultado[0].ago}*\n` +
+    `👁️ Visualizações: *${formatNumberDecimal(res.resultado[0].views)}*\n` +
+    `🔗 Vídeo URL: *${res.resultado[0].url}*\n` +
+    `📺 Canal: *${res.resultado[0].author.name}*`
 }
 
-exports.ytPlayURL = (res) => {
-  return `*➡️ YouTube:*\n• Título: *${res.resultado.title}*\n• Vídeo ID: *${res.resultado.videoId}*\n• Duração: *${res.resultado.timestamp}*\n• Publicação: *${res.resultado.uploadDate}*\n• Visualizações: *${res.resultado.viewsCount}*\n• Vídeo URL: *${res.resultado.externalUrls.video}*\n• Canal: *${res.resultado.channel}*`;
-}
 
 exports.ytp2 = (response) => {
-  return `*✅ MÚSICA ENCONTRADA! ✅*\n• Título: *${response.resultado?.title}*\n• Duração: *${response.resultado?.timestamp}*\n• Canal: *${response.resultado?.channel}*\n• Vídeo URL: *${response.resultado?.externalUrls.video}*\n• Visualizações: *${response.resultado?.viewsCount.replaceAll("visualizações", "")?.trim()}*\n• Postado: *${response.resultado?.uploadDate}*`
+  return `*✅ MÚSICA ENCONTRADA! ✅*\n` +
+    `🎵 Título: *${response.resultado?.title}*\n` +
+    `⏳ Duração: *${response.resultado?.timestamp}*\n` +
+    `📺 Canal: *${response.resultado?.channel}*\n` +
+    `🔗 Vídeo URL: *${response.resultado?.externalUrls.video}*\n` +
+    `👁️ Visualizações: *${response.resultado?.viewsCount.replaceAll("visualizações", "")?.trim()}*\n` +
+    `📅 Postado: *${response.resultado?.uploadDate}*`
 }
+
 
 exports.ytpvid2 = (response) => {
   return `*✅ VÍDEO ENCONTRADO! ✅*\n• Título: *${response.resultado?.title}*\n• Duração: *${response.resultado?.timestamp}*\n• Canal: *${response.resultado?.channel}*\n• Vídeo URL: *${response.resultado?.externalUrls.video}*\n• Visualizações: *${response.resultado?.viewsCount.replaceAll("visualizações", "")?.trim()}*\n• Postado: *${response.resultado?.uploadDate}*`
 }
-
 exports.syntaxDownloadMusic = () => {
 return `Por favor, insira o título de uma música ou vídeo.`
 }
@@ -468,7 +478,7 @@ exports.mediafireDownload = (ABC, encurt) => {
 }
 
 exports.speed = (speedConverted, os, TimeCount) => {
-return `🏓 *Ping:*\n▢ *Latência:* ${String(speedConverted.toFixed(3))} milisegundos.\n▢ *Uptime:* ${TimeCount(process.uptime())}\n—\n⚙️ *Sistema:*\n▢ Sistema Operacional: *${os.type()}*\n▢ Versão: *${os.release()}*\n▢ Memória RAM Usada: *${(os.freemem()/Math.pow(1024, 3)).toFixed(2)} GB*\n▢ Total de Memória RAM: *${(os.totalmem()/Math.pow(1024, 3)).toFixed(2)} GB*\n▢ Uso da CPU: *${os.loadavg()[0].toFixed(2)}%*\n▢ Uso da Memória RAM: *${((os.totalmem() - os.freemem()) / os.totalmem() * 100).toFixed(2)}%*\n▢ Versão do NodeJS: *${process.version}*`
+return `❪💙ꦿᰧ͢𝐒𝐏𝐄𝐄𝐃 ↯ 𝐁𝐎𝐓ེ≭•۟.❫\n⚔️ 𝚅𝚎𝚕𝚘𝚌𝚒𝚝𝚊𝚍𝚎 ❯❯ ${String(speedConverted.toFixed(3))} milisegundos. ❮❮\n⏳ 𝚃𝚎𝚖𝚙𝚘 𝙰𝚝𝚒𝚟𝚘 𖡋  ${TimeCount(process.uptime())}\n🏰 𝚂𝚎𝚛𝚟𝚒𝚍𝚘𝚛 𖡋 HOSTING\n—\n⚙️ 𝚂𝚒𝚜𝚝𝚎𝚖𝚊\n🏰 𝚂𝚒𝚜𝚝𝚎𝚖𝚊 𖡋  *${os.type()}*\n⚓ 𝚅𝚎𝚛𝚜𝚊̃𝚘 𖡋 *${os.release()}*\n🛡️ 𝚁𝚊𝚖 𝚄𝚜𝚊𝚍𝚊 𖡋 *${(os.freemem()/Math.pow(1024, 3)).toFixed(2)} GB*\n💽 𝚃𝚘𝚝𝚊𝚕 𝙳𝚎 𝙼𝚎𝚖𝚘́𝚛𝚒𝚊 𝚁𝚊𝚖 𖡋 *${(os.totalmem()/Math.pow(1024, 3)).toFixed(2)} GB*\n💻 𝙲𝚙𝚞 𖡋 *${os.loadavg()[0].toFixed(2)}%*\n🛡️ 𝚁𝙰𝙼 𖡋 *${((os.totalmem() - os.freemem()) / os.totalmem() * 100).toFixed(2)}%*\n⬛ 𝙽𝚘𝚍𝚎𝙹𝚂 𖡋 *${process.version}*`
 }
 
 exports.horoscopo = (data) =>  {
@@ -556,7 +566,7 @@ return `Adeus usuário: @${menc_os2.split("@")[0]} - Você completou 3 advertên
 }
 
 exports.syntaxAnonymousMail = (prefix) => {
-return `*Para usar o correio elegante ou não*, pode ser uma indireta também.. 😬\n–\nVocê deve primeiramente copiar o número do seu crush ou inimigo(a), após isso, pense em uma mensagem.\n   • Exemplo: *${prefix}correio [número/msg]*\n   • Exemplo sendo usado em prática: *${prefix}correio +5565.../eu te amo*`
+return `*Para usar o correio elegante ou não*, pode ser uma indireta também.. 😬\n–\nVocê deve primeiramente copiar o número do seu crush ou inimigo(a), após isso, pense em uma mensagem.\n   • Exemplo: *${prefix}correio [número/msg]*\n   • Exemplo sendo usado em prática: *${prefix}correio +5582.../eu te amo*`
 }
 
 exports.anonymousMail = (txt2) => {

@@ -1,15 +1,14 @@
 {
   "dependencies": {
+    "@cognima/walib": "latest",
     "@vitalets/google-translate-api": "^9.2.0",
     "acrcloud": "^1.4.0",
     "aki-api": "^x",
     "archiver": "^7.0.1",
     "assemblyai": "^2.0.2",
     "axios": "^0.21.1",
-    "baileys": "^6.7.17",
     "bing-translate-api": "^4.0.2",
     "browser-id3-writer": "^4.4.0",
-    "btch-gemini": "^4.0.91-alpha",
     "cfonts": "^2.10.0",
     "chalk": "^4.1.2",
     "cheerio": "^1.0.0-rc.12",
@@ -55,10 +54,10 @@
     "yt-search": "^2.11.0",
     "zip": "^1.2.0"
   },
-  "name": "Yuri-bot",
+  "name": "YURI BOT",
   "description": "Sempre buscando melhorar, qualquer dúvida entra em contato comigo por meio do WhatsApp: +55 65 9306-5507",
-  "version": "3.0.0",
-  "update_date": "05/2025",
+  "version": "2.5.0",
+  "update_date": "04/2025",
   "main": "index.js",
   "scripts": {
     "start": "ulimit -c 0 && bash start.sh sim",
@@ -66,12 +65,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/YuriModz/Yuri-bot"
+    "url": "https://github.com/YuriModz/Yuri-Bot"
   },
   "author": "Yuri Modz",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/YuriModz/Yuri-bot"
+    "url": "https://github.com/YuriModz/Yuri-Bot"
   },
-  "homepage": "http://Yuriapis.com/docs"
+  "homepage": "http://yuribot.xzy/docs"
 }
